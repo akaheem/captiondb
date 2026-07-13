@@ -37,7 +37,11 @@ test = [
     "httpx>=0.27.0",
 ]
 
+[tool.hatch.build.targets.wheel]
+packages = ["app"]
+
 [tool.pytest.ini_options]
 addopts = "--cov=app --cov-report=term-missing --cov-fail-under=80 -v"
 testpaths = ["tests"]
 asyncio_mode = "auto"
+
