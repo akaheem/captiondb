@@ -65,7 +65,6 @@ EXPOSE 8000
 
 # Liveness probe targeting the Phase 1.6 health endpoint
 HEALTHCHECK --interval=30s --timeout=5s --start-period=5s --retries=3 \
-    CMD curl -f http://localhost:8000/api/v1/health/live || exit 1
-
+    CMD curl -f http://localhost:${PORT:-8000}/api/v1/health/live || exit 1
 # Start the application via Uvicorn
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "${PORT:-8000}"]
