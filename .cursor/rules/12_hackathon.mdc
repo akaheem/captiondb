@@ -1,0 +1,509 @@
+---
+description: CaptionDB AMD Developer Hackathon Engineering Contract
+globs:
+  - "**/*"
+alwaysApply: true
+---
+
+# CaptionDB AMD Developer Hackathon Engineering Contract
+
+## Purpose
+
+This contract defines the engineering rules that ensure CaptionDB satisfies the AMD Developer Hackathon requirements while maintaining production-quality software engineering practices.
+
+This document supplements all other engineering contracts.
+
+If this contract conflicts with another contract, this contract takes precedence only for hackathon-specific requirements.
+
+---
+
+# Primary Goal
+
+The objective is not merely to generate captions.
+
+The objective is to build a complete AI-powered video captioning platform that demonstrates:
+
+- Excellent software engineering
+- Responsible AI usage
+- Efficient Fireworks AI integration
+- Effective AMD compute utilization
+- Production-ready architecture
+- Clean user experience
+
+---
+
+# Engineering Philosophy
+
+The submission should look like a production product.
+
+Never build temporary hackathon shortcuts.
+
+Every implementation should remain useful after the hackathon.
+
+---
+
+# Competition Requirements
+
+The application must support:
+
+✓ Video Upload
+
+✓ Video Processing
+
+✓ Multi-style Caption Generation
+
+✓ Caption Review
+
+✓ Export
+
+✓ User-friendly Interface
+
+✓ Docker Deployment
+
+✓ Fireworks AI Integration
+
+✓ AMD-Compatible Deployment
+
+---
+
+# Caption Styles
+
+Support the required styles:
+
+Formal
+
+Sarcastic
+
+Humorous-Tech
+
+Humorous-NonTech
+
+Future styles should require configuration only.
+
+---
+
+# Hardcoded Content
+
+Never hardcode:
+
+Captions
+
+Responses
+
+Outputs
+
+Scene descriptions
+
+AI responses
+
+Scores
+
+Judging results
+
+Everything must be generated dynamically.
+
+---
+
+# Fireworks Usage
+
+Fireworks is the official AI provider.
+
+All requests must use FireworksClient.
+
+Do not bypass the abstraction layer.
+
+Support provider replacement in the future.
+
+---
+
+# AMD Compatibility
+
+Design the application to run efficiently on AMD-supported environments.
+
+Avoid vendor-specific assumptions.
+
+Keep GPU usage abstract.
+
+Do not introduce CUDA-only implementations.
+
+---
+
+# Runtime
+
+Optimize startup.
+
+Optimize processing.
+
+Avoid unnecessary initialization.
+
+Support efficient execution within hackathon runtime expectations.
+
+---
+
+# Resource Usage
+
+Optimize:
+
+CPU
+
+Memory
+
+Disk
+
+Network
+
+Token usage
+
+Avoid unnecessary resource consumption.
+
+---
+
+# Demonstrating AI
+
+The application should clearly demonstrate:
+
+Vision understanding
+
+Context awareness
+
+Prompt engineering
+
+Structured outputs
+
+Multi-style generation
+
+Quality evaluation
+
+Do not hide AI capabilities.
+
+---
+
+# Prompt Engineering
+
+Prompts should be:
+
+Versioned
+
+Configurable
+
+Documented
+
+Reusable
+
+Never hardcode prompts inside services.
+
+---
+
+# Explainability
+
+Architecture should make it easy to explain:
+
+Pipeline
+
+Prompt flow
+
+Scene detection
+
+Caption generation
+
+Quality evaluation
+
+Judges should understand the system quickly.
+
+---
+
+# Reliability
+
+Failures should degrade gracefully.
+
+If one caption fails:
+
+Continue processing remaining scenes whenever possible.
+
+Avoid complete pipeline failure.
+
+---
+
+# User Experience
+
+Provide:
+
+Progress indicators
+
+Processing status
+
+Meaningful errors
+
+Completion messages
+
+Export confirmation
+
+Avoid silent failures.
+
+---
+
+# Demonstration Readiness
+
+The application should support live demonstration.
+
+Avoid manual setup during demos.
+
+Startup should be straightforward.
+
+Configuration should be simple.
+
+---
+
+# Docker Submission
+
+Docker image should:
+
+Build successfully
+
+Start successfully
+
+Expose required ports
+
+Pass health checks
+
+Require minimal manual configuration
+
+---
+
+# Configuration
+
+Everything should be configurable.
+
+Never require source code modification for:
+
+Model
+
+Prompt
+
+Temperature
+
+Timeout
+
+Feature Flags
+
+Export Format
+
+---
+
+# Logging
+
+Logs should support demo troubleshooting.
+
+Include:
+
+Startup
+
+Pipeline progress
+
+Caption generation
+
+Export
+
+Failures
+
+Do not expose secrets.
+
+---
+
+# Metrics
+
+Collect:
+
+Processing duration
+
+API latency
+
+Caption generation time
+
+Scene count
+
+Frame count
+
+Token usage
+
+Retry count
+
+Success rate
+
+These metrics support future optimization and demo discussions.
+
+---
+
+# Demo Stability
+
+The application should continue operating even when:
+
+Fireworks is temporarily unavailable
+
+OCR fails
+
+One scene fails
+
+A retry is required
+
+Never crash unnecessarily.
+
+---
+
+# Presentation Quality
+
+Generated captions should prioritize:
+
+Accuracy
+
+Clarity
+
+Style consistency
+
+Readability
+
+Safety
+
+Avoid unnecessary complexity.
+
+---
+
+# Repository Quality
+
+Repository should appear professional.
+
+Maintain:
+
+Clear structure
+
+Documentation
+
+Consistent naming
+
+Meaningful commits
+
+Clean architecture
+
+Avoid unused files.
+
+---
+
+# Future Product Vision
+
+The project should remain extensible for future features such as:
+
+Authentication
+
+Collaboration
+
+History
+
+Search
+
+Projects
+
+Cloud Storage
+
+Translation
+
+Subtitle Generation
+
+Analytics
+
+Do not limit future growth.
+
+---
+
+# Engineering Excellence
+
+Before implementation ask:
+
+Is this maintainable?
+
+Is this scalable?
+
+Is this testable?
+
+Is this configurable?
+
+Is this secure?
+
+Is this production-ready?
+
+If the answer is "no", redesign before implementation.
+
+---
+
+# Demo Checklist
+
+Before considering the project complete verify:
+
+✓ Repository organized
+
+✓ Docker builds successfully
+
+✓ Backend starts correctly
+
+✓ Frontend loads successfully
+
+✓ Fireworks integration operational
+
+✓ Video upload works
+
+✓ Scene processing works
+
+✓ Caption generation works
+
+✓ Multiple styles generated
+
+✓ Export works
+
+✓ Errors handled gracefully
+
+✓ Logs available
+
+✓ Metrics collected
+
+✓ Documentation complete
+
+✓ No hardcoded outputs
+
+✓ No exposed secrets
+
+✓ Production-quality architecture maintained
+
+---
+
+# Final Engineering Checklist
+
+Before every implementation Cursor must verify:
+
+✓ Architecture Contract followed
+
+✓ Coding Standards followed
+
+✓ Backend Contract followed
+
+✓ Frontend Contract followed
+
+✓ AI Pipeline Contract followed
+
+✓ Fireworks Contract followed
+
+✓ Security Contract followed
+
+✓ Performance Contract followed
+
+✓ Docker Contract followed
+
+✓ Testing Contract followed
+
+✓ Documentation Contract followed
+
+✓ Hackathon Contract followed
+
+If any contract is violated, revise the implementation before completion.
+
+---
+
+End of AMD Developer Hackathon Engineering Contract.

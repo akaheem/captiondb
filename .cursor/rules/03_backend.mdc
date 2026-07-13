@@ -1,0 +1,675 @@
+---
+description: CaptionDB Backend Engineering Contract
+globs:
+  - "backend/**"
+  - "app/**"
+  - "api/**"
+  - "services/**"
+  - "workers/**"
+alwaysApply: true
+---
+
+# CaptionDB Backend Engineering Contract
+
+## Purpose
+
+This document defines the mandatory backend engineering standards for CaptionDB.
+
+The backend is the orchestration engine of the application.
+
+Its responsibility is to coordinate services, validate requests, manage application state, and expose APIs.
+
+Business logic belongs inside services.
+
+The backend must remain independent of frontend implementation details.
+
+---
+
+# Backend Philosophy
+
+The backend is the heart of CaptionDB.
+
+It is not merely an API.
+
+It is responsible for:
+
+- orchestration
+- business logic
+- validation
+- AI pipeline coordination
+- configuration
+- observability
+- error handling
+
+The backend should remain reusable even if the frontend changes completely.
+
+---
+
+# Technology Stack
+
+Mandatory stack:
+
+- Python 3.12+
+- FastAPI
+- Pydantic v2
+- Uvicorn
+- HTTPX
+- Loguru or standard logging
+- PyYAML
+- python-dotenv
+
+Avoid unnecessary dependencies.
+
+Every dependency must have a clear justification.
+
+---
+
+# Application Structure
+
+The backend should follow this structure.
+
+backend/
+
+app/
+
+api/
+
+core/
+
+config/
+
+models/
+
+schemas/
+
+services/
+
+repositories/
+
+workers/
+
+plugins/
+
+cache/
+
+utils/
+
+tests/
+
+scripts/
+
+Every directory has one responsibility.
+
+Never place unrelated code together.
+
+---
+
+# FastAPI Usage
+
+FastAPI is the application backbone.
+
+Use FastAPI for:
+
+- dependency injection
+- configuration
+- lifecycle management
+- request validation
+- response serialization
+
+Avoid placing business logic inside routes.
+
+---
+
+# Route Responsibilities
+
+Routes should only:
+
+Receive request
+
+↓
+
+Validate input
+
+↓
+
+Call service
+
+↓
+
+Return response
+
+Routes must never:
+
+Call Fireworks directly
+
+Perform OCR
+
+Run AI inference
+
+Contain business logic
+
+Access databases directly
+
+---
+
+# Service Layer
+
+All business logic belongs inside services.
+
+Examples
+
+VideoService
+
+CaptionService
+
+SceneService
+
+ExportService
+
+FireworksService
+
+OCRService
+
+PromptService
+
+JudgeService
+
+MemoryService
+
+Services should communicate through interfaces whenever practical.
+
+---
+
+# Repository Layer
+
+Use repositories only when persistent storage is introduced.
+
+Do not create repositories without a clear need.
+
+Repositories should abstract storage implementation.
+
+Never expose storage implementation to services.
+
+---
+
+# Dependency Injection
+
+All shared services must be injected.
+
+Never instantiate services directly inside routes.
+
+Prefer constructor injection.
+
+Use FastAPI Depends where appropriate.
+
+---
+
+# Configuration
+
+Every configurable value must come from:
+
+Environment variables
+
+Configuration files
+
+Settings objects
+
+Never hardcode:
+
+URLs
+
+API keys
+
+Timeouts
+
+Model IDs
+
+Frame counts
+
+Retry limits
+
+Prompt names
+
+Export paths
+
+Feature flags
+
+---
+
+# Request Validation
+
+Every request must be validated.
+
+Validate:
+
+JSON
+
+Files
+
+Headers
+
+Parameters
+
+Body
+
+Never trust client input.
+
+Reject invalid input immediately.
+
+---
+
+# Response Models
+
+Every endpoint must return typed response models.
+
+Never return anonymous dictionaries.
+
+Responses should be predictable and documented.
+
+---
+
+# Exception Handling
+
+Never expose raw exceptions.
+
+Use custom exceptions.
+
+Centralize exception handling.
+
+Return consistent error responses.
+
+Unexpected failures must be logged.
+
+---
+
+# Global Exception Handler
+
+Implement centralized exception handlers.
+
+Convert internal exceptions into safe API responses.
+
+Never expose stack traces.
+
+Never expose internal implementation.
+
+---
+
+# Logging
+
+Every request should log:
+
+Request ID
+
+Execution time
+
+Status
+
+Warnings
+
+Errors
+
+Retry attempts
+
+Do not log sensitive information.
+
+---
+
+# Correlation IDs
+
+Every incoming request should receive a unique request identifier.
+
+All logs generated during that request should include the same identifier.
+
+This simplifies debugging.
+
+---
+
+# Middleware
+
+Use middleware only when justified.
+
+Examples:
+
+Logging
+
+Request timing
+
+Correlation IDs
+
+Security headers
+
+Compression
+
+Avoid unnecessary middleware.
+
+---
+
+# Background Tasks
+
+Long-running work should not block request processing.
+
+Use:
+
+Background tasks
+
+Worker queues
+
+Async processing
+
+where appropriate.
+
+---
+
+# API Versioning
+
+Design APIs to support future versions.
+
+Prefer:
+
+/api/v1/
+
+instead of
+
+/api/
+
+Future versions should coexist.
+
+---
+
+# Health Endpoint
+
+Implement:
+
+/health
+
+Return:
+
+application status
+
+dependency status
+
+configuration status
+
+version
+
+uptime
+
+No sensitive information.
+
+---
+
+# Readiness Endpoint
+
+Implement:
+
+/ready
+
+Verify:
+
+configuration
+
+required services
+
+Fireworks connectivity (when appropriate)
+
+model availability
+
+Return readiness status.
+
+---
+
+# Metrics Endpoint
+
+Implement metrics support.
+
+Capture:
+
+request count
+
+request latency
+
+error count
+
+processing duration
+
+Fireworks latency
+
+OCR latency
+
+scene detection duration
+
+caption generation duration
+
+cache hit ratio
+
+---
+
+# Timeout Policy
+
+Every external request must define a timeout.
+
+Never rely on infinite waits.
+
+Use configurable timeout values.
+
+---
+
+# Retry Policy
+
+Retry only transient failures.
+
+Examples:
+
+network timeout
+
+temporary service unavailable
+
+rate limit
+
+Use exponential backoff.
+
+Never retry validation failures.
+
+---
+
+# Async Guidelines
+
+Network operations should use asynchronous clients.
+
+CPU-intensive work should not block the event loop.
+
+Use appropriate execution strategies.
+
+Avoid unnecessary async usage.
+
+---
+
+# File Uploads
+
+Validate:
+
+extension
+
+MIME type
+
+size
+
+duration
+
+Reject unsupported files immediately.
+
+Never trust file names.
+
+Generate internal file identifiers.
+
+---
+
+# Temporary Files
+
+Store temporary files in controlled locations.
+
+Automatically clean them after processing.
+
+Never leave temporary files behind.
+
+---
+
+# Caching
+
+Cache only expensive computations.
+
+Examples:
+
+scene detection
+
+OCR
+
+embeddings
+
+video metadata
+
+Prompt templates
+
+Do not cache mutable business state.
+
+---
+
+# Feature Flags
+
+Optional functionality must be controlled through configuration.
+
+Never comment out code to disable features.
+
+Examples:
+
+OCR
+
+Audio
+
+Memory
+
+Judge
+
+Experimental prompts
+
+---
+
+# Interfaces
+
+External integrations must remain behind interfaces.
+
+Never couple application logic directly to:
+
+Fireworks SDK
+
+OCR engine
+
+Scene detector
+
+Storage provider
+
+Export engine
+
+All integrations must be replaceable.
+
+---
+
+# Observability
+
+Every major operation should expose:
+
+execution duration
+
+resource usage
+
+retry count
+
+failure reason
+
+success status
+
+This information should support production debugging.
+
+---
+
+# Security
+
+Validate every request.
+
+Sanitize every filename.
+
+Normalize every path.
+
+Protect every endpoint from malformed input.
+
+Never expose secrets.
+
+Never trust external systems.
+
+---
+
+# Documentation
+
+Every endpoint must include:
+
+summary
+
+description
+
+response model
+
+error responses
+
+tags
+
+FastAPI OpenAPI documentation should remain complete.
+
+---
+
+# Testing
+
+Every service should support isolated testing.
+
+Mock external dependencies.
+
+Avoid network calls during unit tests.
+
+Write integration tests separately.
+
+---
+
+# Self Review Checklist
+
+Before completing backend implementation verify:
+
+✓ Thin routes
+
+✓ Business logic in services
+
+✓ Configuration driven
+
+✓ Dependency injection used
+
+✓ Typed models
+
+✓ Structured logging
+
+✓ Custom exceptions
+
+✓ Request validation
+
+✓ Response models
+
+✓ Async used correctly
+
+✓ Security reviewed
+
+✓ Tests added
+
+✓ Documentation updated
+
+If any item fails, revise the implementation before completion.
+
+---
+
+End of Backend Engineering Contract.

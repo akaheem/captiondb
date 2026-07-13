@@ -1,0 +1,109 @@
+version: '3.8'
+
+services:
+  api:
+    build:
+      context: ./backend
+      target: production
+    image: captiondb/api:latest
+    container_name: captiondb_api
+    restart: always
+    ports:
+      - "8000:8000"
+    env_file:
+      - ./backend/.env
+    environment:
+      # Enforce production mode centrally
+      - APP__ENVIRONMENT=production
+      # Map storage paths to the secure volume mounts inside the container
+      - STORAGE__PROVIDER=local
+      - STORAGE__LOCAL_STORAGE_PATH=/app/data/storage
+    volumes:
+      # Named volumes for production persistence
+      - captiondb_storage:/app/data/storage
+      - captiondb_temp:/app/data/temp
+      - captiondb_logs:/app/data/logs
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/api/v1/health/live"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 5s
+    networks:
+      - captiondb_network
+
+  # ===========================================================================
+  # DATABASE LAYER
+  # ===========================================================================
+  db:
+    image: postgres:15-alpine
+    container_name: captiondb_postgres
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: captiondb
+    ports:
+      - "5432:5432"
+    volumes:
+      - captiondb_postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d captiondb"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - captiondb_network
+  redis:
+    image: redis:7-alpine
+    container_name: captiondb_redis
+    restart: always
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - captiondb_network
+
+  celery_worker:
+    build:
+      context: ./backend
+      target: production
+    image: captiondb/celery:latest
+    container_name: captiondb_celery_worker
+    restart: always
+    env_file:
+      - ./backend/.env
+    environment:
+      - APP__ENVIRONMENT=production
+      - STORAGE__PROVIDER=local
+      - STORAGE__LOCAL_STORAGE_PATH=/app/data/storage
+      - TASKS__BROKER_URL=redis://redis:6379/0
+      - TASKS__RESULT_BACKEND=redis://redis:6379/0
+    command: celery -A app.infrastructure.tasks.celery_app worker --loglevel=info
+    volumes:
+      - captiondb_storage:/app/data/storage
+      - captiondb_temp:/app/data/temp
+      - captiondb_logs:/app/data/logs
+    depends_on:
+      redis:
+        condition: service_healthy
+      db:
+        condition: service_healthy
+    networks:
+      - captiondb_network
+
+networks:
+  # Isolated network preventing unauthorized external access to internal services
+  captiondb_network:
+    driver: bridge
+
+volumes:
+  # Docker-managed persistence volumes
+  captiondb_storage:
+  captiondb_temp:
+  captiondb_logs:
+  captiondb_postgres_data:

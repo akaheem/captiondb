@@ -1,0 +1,582 @@
+---
+description: CaptionDB Frontend Engineering Contract
+globs:
+  - "frontend/**"
+  - "src/**"
+  - "**/*.tsx"
+  - "**/*.ts"
+alwaysApply: true
+---
+
+# CaptionDB Frontend Engineering Contract
+
+## Purpose
+
+This document defines the mandatory frontend engineering standards for CaptionDB.
+
+The frontend is responsible for presenting information and interacting with users.
+
+It must never contain business logic, AI processing, or infrastructure logic.
+
+The frontend should remain lightweight, predictable, modular, and maintainable.
+
+---
+
+# Frontend Philosophy
+
+The frontend is a presentation layer.
+
+It is NOT responsible for:
+
+- AI processing
+- Video processing
+- OCR
+- Scene detection
+- Caption generation
+- Fireworks API
+- Export generation
+
+Those belong to the backend.
+
+The frontend only displays state and sends user actions.
+
+---
+
+# Technology Stack
+
+Mandatory technologies:
+
+- React
+- TypeScript
+- Vite
+
+Optional (if justified):
+
+- React Query
+- Zustand
+- React Hook Form
+- Zod
+
+Do not introduce dependencies without justification.
+
+---
+
+# Folder Structure
+
+Frontend should follow a feature-based architecture.
+
+frontend/
+
+src/
+
+components/
+
+features/
+
+hooks/
+
+services/
+
+api/
+
+types/
+
+utils/
+
+constants/
+
+assets/
+
+styles/
+
+contexts/
+
+pages/
+
+layouts/
+
+providers/
+
+tests/
+
+Keep responsibilities isolated.
+
+---
+
+# Component Philosophy
+
+Components should be:
+
+Small
+
+Reusable
+
+Focused
+
+Predictable
+
+Avoid large components.
+
+Split responsibilities early.
+
+---
+
+# Component Responsibilities
+
+Components should:
+
+Render UI
+
+Handle user interaction
+
+Receive props
+
+Trigger callbacks
+
+Never:
+
+Call Fireworks
+
+Contain AI logic
+
+Perform OCR
+
+Perform video processing
+
+Contain backend business logic
+
+---
+
+# Smart vs Presentational Components
+
+Prefer presentational components.
+
+Business logic belongs in:
+
+Hooks
+
+Services
+
+State management
+
+Never inside rendering logic.
+
+---
+
+# State Management
+
+Use local state for local UI.
+
+Use global state only for shared application state.
+
+Avoid prop drilling.
+
+Global state should remain minimal.
+
+---
+
+# API Communication
+
+All API communication must go through:
+
+services/api/
+
+Never call fetch() directly from components.
+
+Never duplicate HTTP logic.
+
+Create reusable API clients.
+
+---
+
+# API Layer
+
+The API layer should:
+
+Handle requests
+
+Handle responses
+
+Handle retries
+
+Handle errors
+
+Handle authentication (future)
+
+Components should never know implementation details.
+
+---
+
+# Type Safety
+
+Every response should have a TypeScript interface.
+
+Never use any.
+
+Prefer explicit interfaces.
+
+Avoid unknown unless justified.
+
+---
+
+# Constants
+
+Never hardcode:
+
+Endpoints
+
+Routes
+
+Labels
+
+Prompt names
+
+Feature flags
+
+Export formats
+
+Theme values
+
+Configuration belongs in constants or configuration files.
+
+---
+
+# Forms
+
+Use controlled forms.
+
+Validate input before submission.
+
+Display user-friendly validation messages.
+
+Never trust client input.
+
+Backend validates everything again.
+
+---
+
+# Error Handling
+
+Every API request should gracefully handle:
+
+Network failures
+
+Timeouts
+
+Server errors
+
+Validation errors
+
+Unexpected responses
+
+Never leave the UI hanging.
+
+Always inform the user.
+
+---
+
+# Loading States
+
+Every asynchronous operation must display:
+
+Loading indicator
+
+Disabled actions when appropriate
+
+Progress when available
+
+Never leave users wondering.
+
+---
+
+# Empty States
+
+Design explicit empty states.
+
+Examples:
+
+No projects
+
+No videos
+
+No captions
+
+No search results
+
+Provide guidance instead of blank screens.
+
+---
+
+# Optimistic Updates
+
+Use optimistic updates only when safe.
+
+Rollback changes if requests fail.
+
+Never mislead the user.
+
+---
+
+# Component Naming
+
+Use PascalCase.
+
+Examples
+
+VideoUploader
+
+ProjectSidebar
+
+CaptionCard
+
+ExportDialog
+
+---
+
+# Hooks
+
+Custom hooks begin with:
+
+use
+
+Examples
+
+useProjects
+
+useCaptions
+
+useVideoUpload
+
+useProcessingStatus
+
+Hooks should encapsulate reusable logic.
+
+---
+
+# Styling
+
+Maintain consistent styling.
+
+Avoid inline styles unless necessary.
+
+Use reusable design tokens.
+
+Keep visual consistency across the application.
+
+---
+
+# Accessibility
+
+Every interactive component should support:
+
+Keyboard navigation
+
+Focus management
+
+ARIA labels where appropriate
+
+Semantic HTML
+
+Readable contrast
+
+Accessibility is mandatory.
+
+---
+
+# Performance
+
+Avoid unnecessary renders.
+
+Memoize expensive computations when justified.
+
+Lazy load heavy components.
+
+Split code where beneficial.
+
+Do not optimize prematurely.
+
+Measure first.
+
+---
+
+# File Uploads
+
+Validate selected files before upload.
+
+Show file information.
+
+Display upload progress.
+
+Reject unsupported formats immediately.
+
+Never trust filenames.
+
+---
+
+# Notifications
+
+Use consistent notifications for:
+
+Success
+
+Warning
+
+Error
+
+Information
+
+Messages should be concise and actionable.
+
+---
+
+# Dialogs
+
+Dialogs should:
+
+Trap focus
+
+Support keyboard dismissal
+
+Prevent accidental destructive actions
+
+Request confirmation when necessary.
+
+---
+
+# Routing
+
+Separate routing from page implementation.
+
+Avoid embedding business logic inside routes.
+
+Protect future authenticated routes.
+
+---
+
+# Search
+
+Debounce search requests.
+
+Avoid sending unnecessary API calls.
+
+Cache previous results when appropriate.
+
+---
+
+# React Best Practices
+
+Prefer functional components.
+
+Prefer hooks.
+
+Avoid class components.
+
+Keep render methods simple.
+
+Avoid deeply nested JSX.
+
+Extract reusable UI.
+
+---
+
+# Testing
+
+Frontend components should support:
+
+Unit tests
+
+Interaction tests
+
+Accessibility tests
+
+Integration tests
+
+Avoid tightly coupling components to backend implementation.
+
+---
+
+# Documentation
+
+Document reusable components.
+
+Document custom hooks.
+
+Document API services.
+
+Document complex UI behavior.
+
+---
+
+# Security
+
+Escape user-generated content.
+
+Never render unsafe HTML.
+
+Never expose secrets.
+
+Never trust browser validation.
+
+Sanitize displayed data where appropriate.
+
+---
+
+# Future Compatibility
+
+Design components for future expansion.
+
+Support:
+
+Additional caption styles
+
+Additional export formats
+
+Authentication
+
+Collaboration
+
+Real-time updates
+
+History
+
+Versioning
+
+---
+
+# Code Review Checklist
+
+Before completing frontend implementation verify:
+
+✓ Component has one responsibility
+
+✓ No business logic inside UI
+
+✓ Strong typing
+
+✓ API through service layer
+
+✓ Proper loading state
+
+✓ Proper error state
+
+✓ Proper empty state
+
+✓ Accessibility considered
+
+✓ No duplicated components
+
+✓ No hardcoded configuration
+
+✓ Performance reviewed
+
+✓ Security reviewed
+
+✓ Documentation updated
+
+✓ Tests added
+
+If any check fails, revise implementation before completion.
+
+---
+
+End of Frontend Engineering Contract.

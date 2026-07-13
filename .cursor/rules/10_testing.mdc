@@ -1,0 +1,516 @@
+---
+description: CaptionDB Testing & Quality Assurance Engineering Contract
+globs:
+  - "backend/**"
+  - "frontend/**"
+  - "tests/**"
+  - "**/*test*"
+alwaysApply: true
+---
+
+# CaptionDB Testing Engineering Contract
+
+## Purpose
+
+This contract defines the mandatory testing strategy for CaptionDB.
+
+Testing is a required engineering activity.
+
+No feature is considered complete until it has been appropriately tested.
+
+---
+
+# Testing Philosophy
+
+Tests prove correctness.
+
+Tests protect against regression.
+
+Tests improve confidence.
+
+Tests should be:
+
+Reliable
+
+Repeatable
+
+Fast
+
+Independent
+
+Readable
+
+Maintainable
+
+---
+
+# Testing Pyramid
+
+Follow the testing pyramid.
+
+Unit Tests
+
+↓
+
+Integration Tests
+
+↓
+
+End-to-End Tests
+
+Most tests should be unit tests.
+
+Avoid excessive E2E tests.
+
+---
+
+# Test Categories
+
+The project should include:
+
+- Unit Tests
+- Integration Tests
+- API Tests
+- Performance Tests
+- Load Tests
+- Regression Tests
+- Smoke Tests
+- Security Tests
+- UI Tests (Frontend)
+- End-to-End Tests
+
+---
+
+# Unit Testing
+
+Every service should support isolated testing.
+
+Mock external dependencies.
+
+Never call:
+
+Fireworks
+
+OCR
+
+Scene Detection
+
+External APIs
+
+during unit tests.
+
+Unit tests should execute quickly.
+
+---
+
+# Integration Testing
+
+Integration tests verify interaction between modules.
+
+Examples:
+
+Pipeline + Fireworks Client (Mock)
+
+API + Services
+
+Export + Pipeline
+
+Configuration + Application
+
+---
+
+# End-to-End Testing
+
+E2E tests validate complete workflows.
+
+Example:
+
+Upload Video
+
+↓
+
+Processing
+
+↓
+
+Caption Generation
+
+↓
+
+Export
+
+↓
+
+Download
+
+Use representative sample videos.
+
+---
+
+# Test Isolation
+
+Every test should be independent.
+
+Avoid:
+
+Shared state
+
+Shared files
+
+Shared configuration
+
+Order-dependent execution
+
+Tests should pass regardless of execution order.
+
+---
+
+# Test Naming
+
+Use descriptive names.
+
+Good:
+
+test_generate_caption_returns_structured_output
+
+test_invalid_video_is_rejected
+
+Bad:
+
+test1
+
+test_api
+
+---
+
+# Mocking
+
+Mock:
+
+Fireworks
+
+OCR
+
+Filesystem
+
+Network
+
+Time
+
+Environment Variables
+
+Never depend on external services during automated testing.
+
+---
+
+# Fixtures
+
+Use reusable fixtures.
+
+Avoid duplicated setup.
+
+Fixtures should remain focused.
+
+Do not create giant fixtures.
+
+---
+
+# Assertions
+
+Assertions should verify behavior.
+
+Avoid testing implementation details.
+
+Test observable outcomes.
+
+---
+
+# Coverage
+
+Aim for high coverage of business logic.
+
+Focus especially on:
+
+Services
+
+Pipeline
+
+Validation
+
+Utilities
+
+Configuration
+
+Avoid writing meaningless tests solely to increase coverage.
+
+---
+
+# Edge Cases
+
+Every feature should test:
+
+Empty input
+
+Invalid input
+
+Large input
+
+Unexpected input
+
+Boundary values
+
+Timeouts
+
+Retries
+
+Failures
+
+---
+
+# Exception Testing
+
+Verify:
+
+Correct exception type
+
+Correct error message
+
+Correct logging
+
+Graceful recovery
+
+---
+
+# API Testing
+
+Test:
+
+Request validation
+
+Response validation
+
+Status codes
+
+Headers
+
+Error responses
+
+OpenAPI schema consistency
+
+---
+
+# Frontend Testing
+
+Frontend should include:
+
+Component Tests
+
+Hook Tests
+
+Interaction Tests
+
+Accessibility Tests
+
+API Mock Tests
+
+Avoid coupling tests to backend implementation.
+
+---
+
+# Snapshot Testing
+
+Use snapshots sparingly.
+
+Only for stable UI components.
+
+Do not overuse snapshots.
+
+---
+
+# Performance Testing
+
+Measure:
+
+Latency
+
+Memory
+
+CPU
+
+Throughput
+
+Processing Time
+
+Compare benchmark results before and after optimizations.
+
+---
+
+# Load Testing
+
+Support future load testing.
+
+Test:
+
+Concurrent uploads
+
+Concurrent caption generation
+
+Queue behavior
+
+Resource limits
+
+---
+
+# Regression Testing
+
+Every bug fix should include a regression test.
+
+Prevent the same bug from reappearing.
+
+---
+
+# Smoke Testing
+
+Verify:
+
+Application starts
+
+Configuration loads
+
+Health endpoint responds
+
+Pipeline initializes
+
+Critical services available
+
+Run smoke tests after deployment.
+
+---
+
+# Security Testing
+
+Verify:
+
+Input validation
+
+Path traversal protection
+
+File upload validation
+
+Authentication (future)
+
+Authorization (future)
+
+Secret handling
+
+---
+
+# Test Data
+
+Use representative test data.
+
+Avoid using production secrets.
+
+Store test assets separately.
+
+Document large test files.
+
+---
+
+# Temporary Files
+
+Tests must clean temporary files.
+
+Avoid leaving artifacts after execution.
+
+---
+
+# Deterministic Tests
+
+Tests should produce identical results.
+
+Avoid randomness.
+
+If randomness is required, use fixed seeds.
+
+---
+
+# CI Compatibility
+
+All automated tests should run inside CI.
+
+Tests must not require manual interaction.
+
+Tests should fail clearly.
+
+---
+
+# Failure Messages
+
+Assertion failures should explain:
+
+Expected
+
+Actual
+
+Reason
+
+Avoid vague failures.
+
+---
+
+# Code Quality
+
+Testing is not a substitute for code review.
+
+Poor architecture cannot be fixed by more tests.
+
+---
+
+# Documentation
+
+Document:
+
+Test strategy
+
+How to run tests
+
+Required dependencies
+
+Mock strategy
+
+Coverage expectations
+
+---
+
+# Test Review Checklist
+
+Before completing implementation verify:
+
+✓ Unit tests added
+
+✓ Integration tests updated
+
+✓ Edge cases covered
+
+✓ Exceptions tested
+
+✓ Mocks used appropriately
+
+✓ API responses tested
+
+✓ Temporary files cleaned
+
+✓ Performance considered
+
+✓ Security scenarios tested
+
+✓ CI compatible
+
+✓ Documentation updated
+
+If any item fails, revise implementation before completion.
+
+---
+
+End of Testing Engineering Contract.

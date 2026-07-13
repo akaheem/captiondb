@@ -1,0 +1,634 @@
+---
+description: CaptionDB Security Engineering Contract
+globs:
+  - "backend/**"
+  - "frontend/**"
+  - "docker/**"
+  - ".github/**"
+alwaysApply: true
+---
+
+# CaptionDB Security Engineering Contract
+
+## Purpose
+
+This contract defines the mandatory security standards for the CaptionDB project.
+
+Security is a fundamental engineering requirement.
+
+Every implementation must protect:
+
+- Users
+- API Keys
+- Uploaded videos
+- Generated captions
+- System resources
+- Infrastructure
+
+Security is not optional.
+
+---
+
+# Security Philosophy
+
+Assume:
+
+Every input is malicious.
+
+Every uploaded file is untrusted.
+
+Every API response could be malformed.
+
+Every network request can fail.
+
+Every external service can become unavailable.
+
+Trust nothing.
+
+Validate everything.
+
+---
+
+# Zero Trust Architecture
+
+Never trust:
+
+User input
+
+Uploaded files
+
+Environment variables
+
+JSON payloads
+
+URLs
+
+HTTP Headers
+
+External APIs
+
+Filesystem paths
+
+Always validate before use.
+
+---
+
+# Secrets Management
+
+Never hardcode:
+
+API Keys
+
+Passwords
+
+Tokens
+
+Secrets
+
+Certificates
+
+Private Keys
+
+Credentials
+
+Secrets must only come from:
+
+Environment Variables
+
+Secret Managers (future)
+
+Encrypted configuration
+
+Never commit secrets to Git.
+
+---
+
+# Logging Rules
+
+Never log:
+
+API Keys
+
+Bearer Tokens
+
+Passwords
+
+Private Prompts
+
+Sensitive Metadata
+
+User Secrets
+
+Personally identifiable information
+
+Logs should be safe to share.
+
+---
+
+# Input Validation
+
+Every request must validate:
+
+Type
+
+Length
+
+Range
+
+Format
+
+Encoding
+
+Required fields
+
+Reject invalid data immediately.
+
+---
+
+# File Upload Security
+
+Validate:
+
+Extension
+
+MIME Type
+
+Magic Bytes
+
+Size
+
+Duration
+
+Resolution
+
+Reject unsupported files.
+
+Never trust filenames.
+
+Generate internal filenames.
+
+---
+
+# Path Traversal Protection
+
+Never concatenate file paths.
+
+Always normalize paths.
+
+Reject:
+
+../
+
+Absolute paths
+
+Invalid characters
+
+Ensure files remain inside approved directories.
+
+---
+
+# Temporary Files
+
+Temporary files must:
+
+Use secure directories
+
+Have unique names
+
+Be cleaned automatically
+
+Never remain after processing
+
+---
+
+# JSON Validation
+
+Validate all JSON.
+
+Reject:
+
+Missing fields
+
+Unknown structures
+
+Invalid types
+
+Malformed payloads
+
+Use Pydantic models whenever possible.
+
+---
+
+# API Security
+
+Validate every request.
+
+Return consistent error messages.
+
+Never expose:
+
+Stack traces
+
+Internal file paths
+
+SQL errors
+
+Framework internals
+
+Third-party exceptions
+
+---
+
+# Authentication
+
+Design APIs to support authentication.
+
+Even if authentication is disabled for the hackathon.
+
+Authentication should remain pluggable.
+
+---
+
+# Authorization
+
+Prepare the architecture for:
+
+User roles
+
+Permissions
+
+Project ownership
+
+Resource isolation
+
+Do not hardcode authorization logic.
+
+---
+
+# Dependency Security
+
+Use pinned dependency versions.
+
+Avoid unmaintained libraries.
+
+Review dependencies before adding.
+
+Remove unused dependencies.
+
+---
+
+# Dependency Scanning
+
+Support automated vulnerability scanning.
+
+Examples:
+
+pip-audit
+
+Safety
+
+Dependabot
+
+GitHub Security
+
+Resolve high severity vulnerabilities before release.
+
+---
+
+# Docker Security
+
+Containers must:
+
+Run as non-root
+
+Use minimal images
+
+Avoid unnecessary packages
+
+Use read-only filesystem where practical
+
+Expose only required ports
+
+Pin base image versions
+
+---
+
+# Network Security
+
+Every HTTP request should define:
+
+Timeout
+
+Retry policy
+
+TLS verification
+
+Connection reuse
+
+Never disable certificate verification.
+
+---
+
+# Fireworks Security
+
+Protect:
+
+API Key
+
+Request payloads
+
+Prompt content
+
+Model configuration
+
+Never expose provider credentials.
+
+---
+
+# Prompt Security
+
+Prompt templates must not contain:
+
+Secrets
+
+Credentials
+
+System information
+
+Internal architecture
+
+Private configuration
+
+Keep prompts isolated from sensitive information.
+
+---
+
+# Output Validation
+
+Validate AI responses before using them.
+
+Reject:
+
+Empty outputs
+
+Malformed structures
+
+Unexpected content
+
+Invalid JSON
+
+Never trust AI output.
+
+---
+
+# Error Handling
+
+Do not expose internal implementation details.
+
+Return safe error messages.
+
+Log detailed information internally.
+
+Users receive friendly responses.
+
+---
+
+# Rate Limiting
+
+Support configurable rate limiting.
+
+Protect:
+
+Upload endpoints
+
+Caption generation
+
+Heavy processing endpoints
+
+Future authentication endpoints
+
+---
+
+# Denial of Service Protection
+
+Reject:
+
+Oversized files
+
+Repeated requests
+
+Malformed payloads
+
+Unexpected content
+
+Protect expensive AI operations.
+
+---
+
+# Resource Limits
+
+Every operation should define:
+
+Maximum file size
+
+Maximum duration
+
+Maximum frame count
+
+Maximum OCR pages
+
+Maximum retries
+
+Maximum memory usage
+
+All limits should be configurable.
+
+---
+
+# CORS
+
+Allow only approved origins.
+
+Never use:
+
+Allow-Origin: *
+
+in production.
+
+Configuration should control allowed origins.
+
+---
+
+# Security Headers
+
+Support:
+
+X-Content-Type-Options
+
+Content-Security-Policy
+
+Referrer-Policy
+
+X-Frame-Options
+
+Strict-Transport-Security (future HTTPS)
+
+---
+
+# Encryption
+
+Support encrypted transport.
+
+Never send secrets over insecure connections.
+
+Prepare for encrypted storage if future persistence is introduced.
+
+---
+
+# Session Security
+
+Future authentication should support:
+
+Secure cookies
+
+Expiration
+
+Refresh
+
+Revocation
+
+Do not hardcode session behavior.
+
+---
+
+# Audit Logging
+
+Record security-relevant events.
+
+Examples:
+
+Authentication failures
+
+Repeated validation failures
+
+Configuration errors
+
+Unexpected provider failures
+
+Do not record sensitive data.
+
+---
+
+# Exception Security
+
+Never leak:
+
+Internal exceptions
+
+Provider exceptions
+
+Database errors
+
+Filesystem structure
+
+Wrap exceptions before returning responses.
+
+---
+
+# Static Analysis
+
+Support:
+
+Bandit
+
+Ruff
+
+MyPy
+
+Security scanning should become part of CI.
+
+---
+
+# Supply Chain Security
+
+Review every dependency.
+
+Prefer official libraries.
+
+Avoid abandoned packages.
+
+Verify package source.
+
+Pin versions.
+
+---
+
+# Secure Defaults
+
+Security features should default to:
+
+Enabled
+
+Users must explicitly disable optional features.
+
+Never default to insecure behavior.
+
+---
+
+# Future Security
+
+Architecture should support:
+
+Authentication
+
+Authorization
+
+Encrypted storage
+
+RBAC
+
+API Gateway
+
+Secrets Manager
+
+Without major redesign.
+
+---
+
+# Security Review Checklist
+
+Before completing implementation verify:
+
+✓ No hardcoded secrets
+
+✓ Input validated
+
+✓ Output validated
+
+✓ File uploads protected
+
+✓ Paths sanitized
+
+✓ Exceptions wrapped
+
+✓ Logs sanitized
+
+✓ Dependencies reviewed
+
+✓ Docker secured
+
+✓ Network requests protected
+
+✓ Resource limits enforced
+
+✓ Security headers configured
+
+✓ Tests added
+
+✓ Documentation updated
+
+If any item fails, revise the implementation before completion.
+
+---
+
+End of Security Engineering Contract.

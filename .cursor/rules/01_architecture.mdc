@@ -1,0 +1,488 @@
+---
+description: CaptionDB Core Architecture Contract
+globs:
+alwaysApply: true
+---
+
+# CaptionDB Architecture Contract
+
+## Purpose
+
+This document defines the mandatory architecture for the CaptionDB project.
+
+Every implementation must follow this architecture unless explicitly instructed otherwise by the project owner.
+
+The objective is to build production-quality software for the AMD Developer Hackathon while maintaining a clean, extensible codebase suitable for future open-source development.
+
+This document takes precedence over implementation convenience.
+
+---
+
+# Engineering Philosophy
+
+CaptionDB is NOT a hackathon prototype.
+
+CaptionDB is Version 1 of a production AI platform.
+
+Every architectural decision must prioritize:
+
+- Maintainability
+- Readability
+- Extensibility
+- Performance
+- Security
+- Testability
+
+Never optimize for writing less code.
+
+Optimize for writing better software.
+
+---
+
+# Core Principles
+
+Always follow:
+
+- SOLID
+- DRY
+- KISS
+- Separation of Concerns
+- Dependency Inversion
+- Composition over Inheritance
+- Explicit over Implicit
+- Configuration over Hardcoding
+
+---
+
+# Repository Philosophy
+
+The repository must remain organized.
+
+Separate responsibilities clearly.
+
+Frontend must never contain backend logic.
+
+Backend must never contain frontend logic.
+
+AI logic must never be mixed with API logic.
+
+Business logic must never be mixed with infrastructure.
+
+---
+
+# High Level Architecture
+
+The system consists of the following independent layers:
+
+Frontend
+
+↓
+
+REST API
+
+↓
+
+Application Layer
+
+↓
+
+Pipeline Orchestrator
+
+↓
+
+AI Services
+
+↓
+
+Infrastructure
+
+↓
+
+Storage
+
+Each layer communicates only through well-defined interfaces.
+
+Never bypass layers.
+
+---
+
+# Backend Philosophy
+
+FastAPI is the application backbone.
+
+Do not use FastAPI only for routes.
+
+Use it for:
+
+- dependency injection
+- configuration
+- application lifecycle
+- service orchestration
+
+---
+
+# AI Architecture
+
+Every AI capability must exist behind an abstraction.
+
+Examples:
+
+SceneDetector
+
+OCRService
+
+FireworksClient
+
+PromptManager
+
+CaptionGenerator
+
+JudgeService
+
+MemoryService
+
+Exporter
+
+Never directly call external SDKs throughout the project.
+
+All external services must have dedicated wrapper classes.
+
+---
+
+# Plugin Architecture
+
+Major components must be replaceable.
+
+Examples:
+
+Scene Detection
+
+OCR
+
+Caption Generator
+
+LLM Provider
+
+Embedding Provider
+
+Storage Provider
+
+Export Provider
+
+Changing providers must require minimal code changes.
+
+---
+
+# Dependency Direction
+
+Dependencies always flow inward.
+
+Frontend
+
+→ API
+
+→ Services
+
+→ Interfaces
+
+→ Infrastructure
+
+Never reverse dependency direction.
+
+---
+
+# Configuration Policy
+
+No implementation may hardcode:
+
+API Keys
+
+URLs
+
+Paths
+
+Model IDs
+
+Temperatures
+
+Retry Counts
+
+Timeouts
+
+Frame Counts
+
+Thresholds
+
+Thread Counts
+
+Export Locations
+
+Everything must come from configuration.
+
+---
+
+# Dependency Injection
+
+Services must receive dependencies through constructors or FastAPI dependency injection.
+
+Never instantiate shared services inside business logic.
+
+Avoid global mutable state.
+
+---
+
+# Service Layer
+
+Business logic belongs inside services.
+
+Routes should remain thin.
+
+Routes should:
+
+Validate
+
+↓
+
+Call service
+
+↓
+
+Return response
+
+Nothing more.
+
+---
+
+# API Layer
+
+The API layer must never contain AI logic.
+
+The API layer only:
+
+Validates requests
+
+Calls services
+
+Returns responses
+
+Handles exceptions
+
+---
+
+# Domain Models
+
+Use strongly typed models.
+
+Prefer Pydantic for API schemas.
+
+Prefer dataclasses or domain models where appropriate for internal business logic.
+
+Avoid passing dictionaries between services.
+
+---
+
+# Exception Hierarchy
+
+All custom exceptions inherit from:
+
+CaptionDBException
+
+Examples:
+
+ConfigurationException
+
+ValidationException
+
+SceneDetectionException
+
+OCRException
+
+FireworksException
+
+PipelineException
+
+ExportException
+
+StorageException
+
+Never raise generic Exception unless absolutely necessary.
+
+---
+
+# Logging Philosophy
+
+Never use print().
+
+Every module must use structured logging.
+
+Log:
+
+start
+
+finish
+
+duration
+
+warnings
+
+errors
+
+retry attempts
+
+important decisions
+
+Never log secrets.
+
+Never log API keys.
+
+---
+
+# File Structure
+
+Every folder has one responsibility.
+
+Avoid dumping unrelated modules into one package.
+
+Favor many focused modules over giant files.
+
+---
+
+# Async Philosophy
+
+Use asynchronous programming only when it improves performance or scalability.
+
+Do not convert everything to async unnecessarily.
+
+CPU-bound work should use appropriate execution strategies.
+
+Network operations should use async clients where practical.
+
+---
+
+# Memory Management
+
+Avoid unnecessary object duplication.
+
+Release large objects when no longer needed.
+
+Reuse expensive resources.
+
+Cache expensive computations where beneficial.
+
+---
+
+# Documentation
+
+Every public class
+
+Every public function
+
+Every service
+
+Every API endpoint
+
+must contain documentation.
+
+---
+
+# Testing
+
+Every module must be testable independently.
+
+Avoid hidden dependencies.
+
+Favor dependency injection to simplify testing.
+
+---
+
+# Extensibility
+
+Every architectural decision should consider future versions.
+
+Ask:
+
+Can this component be replaced?
+
+Can another model be used?
+
+Can another OCR engine be added?
+
+Can another storage provider be added?
+
+If the answer is "no", redesign before implementation.
+
+---
+
+# Architecture Decision Process
+
+Before implementing any feature:
+
+Understand the problem.
+
+Identify affected modules.
+
+Review existing architecture.
+
+Avoid duplication.
+
+Prefer extension over modification.
+
+Document important decisions.
+
+Only then implement.
+
+---
+
+# Evidence-Based Engineering
+
+Never invent:
+
+SDK methods
+
+API responses
+
+Library behavior
+
+Framework capabilities
+
+If documentation is unavailable:
+
+Create an interface.
+
+Mark implementation with TODO.
+
+Explain assumptions.
+
+Do not fabricate code.
+
+---
+
+# Self Review
+
+Before completing any implementation verify:
+
+Architecture consistency
+
+No hardcoded values
+
+No duplicated logic
+
+Proper abstraction
+
+Correct dependency direction
+
+Proper exception handling
+
+Logging present
+
+Configuration driven
+
+Documentation updated
+
+Tests planned
+
+If any check fails, revise the implementation before considering it complete.
+
+---
+
+End of Architecture Contract.  

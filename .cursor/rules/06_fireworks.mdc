@@ -1,0 +1,571 @@
+---
+description: CaptionDB Fireworks AI Integration Contract
+globs:
+  - "backend/app/services/fireworks/**"
+  - "backend/app/services/caption/**"
+  - "backend/app/services/prompt/**"
+  - "backend/app/plugins/llm/**"
+alwaysApply: true
+---
+
+# CaptionDB Fireworks AI Engineering Contract
+
+## Purpose
+
+This contract defines how Fireworks AI must be integrated into CaptionDB.
+
+Fireworks is the AI inference provider used for the AMD Developer Hackathon.
+
+The implementation must remain provider-independent so that Fireworks can be replaced in the future with minimal code changes.
+
+---
+
+# Engineering Philosophy
+
+Fireworks is an implementation detail.
+
+The application architecture must never depend directly on Fireworks SDK methods.
+
+The rest of the application should depend only on interfaces.
+
+---
+
+# Single Integration Point
+
+Only one service may communicate with Fireworks.
+
+FireworksClient
+
+Every AI request must go through this client.
+
+Never call Fireworks directly from:
+
+Routes
+
+Services
+
+Workers
+
+Components
+
+Pipeline
+
+Prompt Manager
+
+Judge
+
+Memory
+
+OCR
+
+Scene Detection
+
+---
+
+# Responsibilities of FireworksClient
+
+FireworksClient is responsible for:
+
+Authentication
+
+Connection management
+
+Retries
+
+Timeouts
+
+Rate limiting
+
+Structured outputs
+
+Logging
+
+Metrics
+
+Response validation
+
+Error translation
+
+Provider abstraction
+
+Nothing else.
+
+---
+
+# Provider Independence
+
+Business logic must never know:
+
+Fireworks SDK
+
+Fireworks URLs
+
+Fireworks response objects
+
+Fireworks exceptions
+
+Convert Fireworks responses into CaptionDB domain models.
+
+---
+
+# Authentication
+
+API keys must only come from:
+
+Environment variables
+
+Secrets manager (future)
+
+Never hardcode credentials.
+
+Never log API keys.
+
+Never expose keys in exceptions.
+
+---
+
+# Model Configuration
+
+Never hardcode model IDs.
+
+Model configuration belongs in:
+
+models.yaml
+
+or
+
+settings
+
+Support switching models without modifying application logic.
+
+---
+
+# Prompt Handling
+
+Prompt text must never be created inside FireworksClient.
+
+FireworksClient only receives:
+
+System Prompt
+
+User Prompt
+
+Images
+
+Metadata
+
+Generation Settings
+
+Prompt construction belongs elsewhere.
+
+---
+
+# Structured Outputs
+
+Whenever supported, prefer structured outputs over free-form text.
+
+Responses should map into typed models.
+
+Avoid manual string parsing.
+
+---
+
+# Response Validation
+
+Every Fireworks response must be validated.
+
+Check:
+
+Missing fields
+
+Malformed responses
+
+Empty outputs
+
+Unexpected formats
+
+Reject invalid responses gracefully.
+
+---
+
+# Retry Policy
+
+Retry only transient failures.
+
+Examples:
+
+Timeout
+
+429
+
+503
+
+Temporary network failures
+
+Never retry:
+
+Invalid request
+
+Authentication failure
+
+Validation errors
+
+Configuration errors
+
+---
+
+# Exponential Backoff
+
+Retry delays should use exponential backoff.
+
+Backoff values must be configurable.
+
+Avoid retry storms.
+
+---
+
+# Timeout Policy
+
+Every request must define:
+
+Connection timeout
+
+Read timeout
+
+Overall timeout
+
+Never wait indefinitely.
+
+---
+
+# Rate Limiting
+
+Respect Fireworks limits.
+
+Support configurable request throttling.
+
+Queue requests if necessary.
+
+Avoid accidental API flooding.
+
+---
+
+# Parallel Requests
+
+Parallel requests are allowed only when:
+
+Independent
+
+Thread-safe
+
+Within provider limits
+
+Never exceed configured concurrency.
+
+---
+
+# Request Validation
+
+Before sending requests validate:
+
+Prompt
+
+Images
+
+Configuration
+
+Model
+
+Generation settings
+
+Reject invalid requests before contacting Fireworks.
+
+---
+
+# Image Handling
+
+Validate:
+
+Image count
+
+Image format
+
+Image size
+
+Resolution
+
+Encoding
+
+Reject unsupported inputs.
+
+---
+
+# Prompt Versioning
+
+Prompt templates must support versions.
+
+Example:
+
+v1
+
+v2
+
+v3
+
+The selected prompt version should be configurable.
+
+---
+
+# Generation Parameters
+
+Never hardcode:
+
+Temperature
+
+Top P
+
+Max Tokens
+
+Stop Sequences
+
+Frequency Penalty
+
+Presence Penalty
+
+Configuration controls generation.
+
+---
+
+# Metrics
+
+Capture:
+
+Latency
+
+Input tokens
+
+Output tokens
+
+Total tokens
+
+Retry count
+
+Failure reason
+
+Model used
+
+Request duration
+
+Store metrics separately from business logic.
+
+---
+
+# Logging
+
+Log:
+
+Request ID
+
+Model
+
+Latency
+
+Retry count
+
+Success
+
+Failure
+
+Never log:
+
+API keys
+
+Sensitive prompts
+
+Private user data
+
+---
+
+# Error Translation
+
+Translate provider-specific errors into CaptionDB exceptions.
+
+Examples:
+
+FireworksAuthenticationException
+
+↓
+
+ConfigurationException
+
+FireworksTimeoutException
+
+↓
+
+FireworksException
+
+FireworksRateLimitException
+
+↓
+
+RetryableException
+
+The rest of the application should never depend on Fireworks exception classes.
+
+---
+
+# Fallback Strategy
+
+Support future fallback providers.
+
+Example:
+
+Fireworks
+
+↓
+
+Secondary Provider
+
+↓
+
+Local Model
+
+The pipeline should support provider failover through configuration.
+
+---
+
+# Connection Reuse
+
+Reuse HTTP connections whenever possible.
+
+Avoid creating a new client for every request.
+
+Connection pooling should be enabled.
+
+---
+
+# Batch Requests
+
+Where supported and beneficial, batch requests instead of sending many small requests.
+
+Batching must remain configurable.
+
+---
+
+# Streaming
+
+Streaming support should remain optional.
+
+Application logic should function correctly whether streaming is enabled or disabled.
+
+---
+
+# Circuit Breaker
+
+Protect Fireworks from repeated failures.
+
+If repeated failures occur:
+
+Pause requests
+
+Log the issue
+
+Return meaningful errors
+
+Avoid overwhelming the provider.
+
+---
+
+# Caching
+
+Do not cache mutable responses.
+
+Only cache when explicitly enabled.
+
+Examples:
+
+Vision descriptions
+
+Embeddings
+
+Prompt templates
+
+Configuration
+
+Cache policy must be configurable.
+
+---
+
+# Dependency Injection
+
+FireworksClient must be injected.
+
+Never instantiate it inside business logic.
+
+---
+
+# Testing
+
+Mock Fireworks in unit tests.
+
+Never call the real API during automated testing.
+
+Integration tests should remain separate.
+
+---
+
+# Documentation
+
+Document:
+
+Supported models
+
+Configuration
+
+Generation settings
+
+Retry policy
+
+Timeout policy
+
+Failure modes
+
+---
+
+# Self Review Checklist
+
+Before completing implementation verify:
+
+✓ Single integration point
+
+✓ No direct SDK usage outside FireworksClient
+
+✓ Configuration driven
+
+✓ Typed responses
+
+✓ Structured outputs
+
+✓ Retry policy implemented
+
+✓ Timeouts configured
+
+✓ Rate limiting respected
+
+✓ Logging implemented
+
+✓ Metrics collected
+
+✓ API keys protected
+
+✓ Provider independent
+
+✓ Tests added
+
+✓ Documentation updated
+
+If any check fails, revise implementation before completion.
+
+---
+
+End of Fireworks AI Engineering Contract.

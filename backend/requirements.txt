@@ -1,0 +1,3 @@
+# Migrated to pyproject.toml
+# Please use modern python packaging tools (e.g. uv, pip install -e .)
+

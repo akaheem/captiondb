@@ -1,0 +1,611 @@
+---
+description: CaptionDB Coding Standards Contract
+globs:
+  - "backend/**"
+  - "frontend/**"
+  - "scripts/**"
+  - "tests/**"
+alwaysApply: true
+---
+
+# CaptionDB Coding Standards Contract
+
+## Purpose
+
+This document defines the mandatory coding standards for the CaptionDB project.
+
+Every source file generated for this repository must follow these standards.
+
+These standards take precedence over convenience.
+
+---
+
+# General Philosophy
+
+Every line of code should be:
+
+- Readable
+- Predictable
+- Testable
+- Maintainable
+- Extensible
+- Explicit
+
+Code is written for humans first and computers second.
+
+---
+
+# General Rules
+
+Always write production-quality code.
+
+Never write demo-quality code.
+
+Never sacrifice readability for brevity.
+
+Prefer clarity over cleverness.
+
+Avoid premature optimization.
+
+Optimize only after correctness.
+
+---
+
+# Supported Languages
+
+Backend
+
+- Python 3.12+
+
+Frontend
+
+- TypeScript
+- React
+- Vite
+
+---
+
+# Naming Conventions
+
+## Variables
+
+Use descriptive names.
+
+Good
+
+video_processor
+
+scene_detector
+
+caption_request
+
+Bad
+
+tmp
+
+obj
+
+data1
+
+value
+
+---
+
+## Functions
+
+Use verbs.
+
+Good
+
+generate_caption()
+
+extract_frames()
+
+detect_scenes()
+
+validate_request()
+
+Bad
+
+caption()
+
+frames()
+
+scene()
+
+---
+
+## Classes
+
+Use PascalCase.
+
+Good
+
+FireworksClient
+
+CaptionGenerator
+
+SceneDetector
+
+PromptManager
+
+---
+
+## Constants
+
+Use UPPER_CASE.
+
+Example
+
+DEFAULT_TIMEOUT
+
+MAX_FRAME_COUNT
+
+CACHE_DIRECTORY
+
+---
+
+## Files
+
+Use snake_case.
+
+Examples
+
+scene_detector.py
+
+caption_generator.py
+
+prompt_manager.py
+
+---
+
+## React Components
+
+Use PascalCase.
+
+Examples
+
+Sidebar.tsx
+
+VideoPlayer.tsx
+
+ExportDialog.tsx
+
+---
+
+# Function Design
+
+Functions should perform one responsibility.
+
+Avoid long functions.
+
+Target:
+
+20–40 lines
+
+Refactor when complexity increases.
+
+---
+
+# Class Design
+
+Classes should have one responsibility.
+
+Large classes should be split.
+
+Prefer composition over inheritance.
+
+---
+
+# Type Safety
+
+Python
+
+Always use type hints.
+
+Every parameter.
+
+Every return value.
+
+Avoid Any unless absolutely necessary.
+
+TypeScript
+
+Never use any.
+
+Prefer unknown if required.
+
+Use strict typing.
+
+---
+
+# Data Models
+
+Never pass raw dictionaries through the application.
+
+Use:
+
+Pydantic models
+
+Dataclasses
+
+Typed interfaces
+
+Domain models
+
+---
+
+# Imports
+
+Order imports as:
+
+1. Standard Library
+
+2. Third-party Packages
+
+3. Internal Modules
+
+Separate each group with a blank line.
+
+Never use wildcard imports.
+
+Example
+
+from module import *
+
+is prohibited.
+
+---
+
+# Magic Numbers
+
+Never use magic numbers.
+
+Bad
+
+timeout = 17
+
+Good
+
+timeout = settings.api_timeout
+
+---
+
+# Hardcoded Values
+
+Never hardcode:
+
+API keys
+
+URLs
+
+Paths
+
+Model IDs
+
+Temperatures
+
+Retry counts
+
+Timeouts
+
+Frame counts
+
+Thresholds
+
+Prompt text
+
+Style names
+
+Everything belongs in configuration.
+
+---
+
+# Comments
+
+Write comments only when necessary.
+
+Explain WHY.
+
+Do not explain WHAT.
+
+Bad
+
+Increment i
+
+Good
+
+Retry to handle temporary API rate limits.
+
+---
+
+# Docstrings
+
+Every public:
+
+Function
+
+Class
+
+Method
+
+Module
+
+must include docstrings.
+
+Use Google style.
+
+Include:
+
+Purpose
+
+Arguments
+
+Returns
+
+Raises
+
+---
+
+# Error Handling
+
+Never ignore exceptions.
+
+Never suppress exceptions.
+
+Never use:
+
+except:
+    pass
+
+Catch specific exceptions.
+
+Raise meaningful custom exceptions.
+
+Always log unexpected failures.
+
+---
+
+# Logging
+
+Never use print().
+
+Use structured logging.
+
+Log:
+
+Entry
+
+Exit
+
+Duration
+
+Warnings
+
+Errors
+
+Retries
+
+Important decisions
+
+Never log:
+
+Secrets
+
+API Keys
+
+Tokens
+
+Passwords
+
+Sensitive data
+
+---
+
+# Async Rules
+
+Use async only when appropriate.
+
+Network operations
+
+Async
+
+CPU intensive tasks
+
+Use worker threads or appropriate executors.
+
+Do not mix sync and async incorrectly.
+
+---
+
+# Code Duplication
+
+Avoid duplication.
+
+If logic appears twice
+
+extract it.
+
+Prefer reusable utilities.
+
+---
+
+# Dependency Injection
+
+Never instantiate shared services inside business logic.
+
+Receive dependencies through constructors or FastAPI dependency injection.
+
+---
+
+# Configuration
+
+Every configurable value belongs in:
+
+Environment variables
+
+Configuration files
+
+Settings
+
+Never inside business logic.
+
+---
+
+# Validation
+
+Validate every external input.
+
+Never trust:
+
+User input
+
+API responses
+
+File contents
+
+JSON
+
+Environment variables
+
+Validate before processing.
+
+---
+
+# Security
+
+Never trust filenames.
+
+Never trust paths.
+
+Never trust MIME types.
+
+Never expose internal exceptions directly.
+
+Never expose stack traces to users.
+
+---
+
+# Performance
+
+Avoid unnecessary loops.
+
+Avoid unnecessary copies.
+
+Reuse expensive resources.
+
+Cache when beneficial.
+
+Measure before optimizing.
+
+---
+
+# API Responses
+
+Use strongly typed response models.
+
+Never return inconsistent structures.
+
+All responses should be predictable.
+
+---
+
+# File Size
+
+Prefer small focused files.
+
+Avoid files larger than approximately 500 lines unless there is a clear architectural justification.
+
+Split responsibilities instead of creating monolithic modules.
+
+---
+
+# Function Parameters
+
+Avoid long parameter lists.
+
+Prefer configuration objects or typed models.
+
+---
+
+# Testing
+
+Every new feature should include:
+
+Unit tests
+
+Edge case tests
+
+Failure tests
+
+Integration tests when applicable
+
+---
+
+# Documentation
+
+Whenever implementation changes behavior:
+
+Update documentation.
+
+Update README if required.
+
+Update API specification if required.
+
+---
+
+# TODO Policy
+
+TODOs are allowed only when:
+
+Waiting for external dependency
+
+Waiting for official documentation
+
+Waiting for future implementation
+
+Every TODO must explain:
+
+Why
+
+Owner
+
+Expected future work
+
+---
+
+# Code Review Checklist
+
+Before finalizing implementation verify:
+
+✓ No hardcoded values
+
+✓ No duplicated code
+
+✓ Proper typing
+
+✓ Proper naming
+
+✓ Proper logging
+
+✓ Proper exception handling
+
+✓ Documentation added
+
+✓ Configuration driven
+
+✓ Tests added
+
+✓ Imports organized
+
+✓ Security considered
+
+✓ Performance reviewed
+
+✓ Compatible with existing architecture
+
+If any check fails, revise the implementation before completion.
+
+---
+
+End of Coding Standards Contract.

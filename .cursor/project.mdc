@@ -1,0 +1,574 @@
+# CaptionDB Project Context
+
+Version: 1.0
+
+---
+
+# Project Name
+
+CaptionDB
+
+---
+
+# Project Vision
+
+CaptionDB is a production-grade AI-powered video captioning platform.
+
+The project is being developed for the AMD Developer Hackathon but is intentionally architected as a long-term software product rather than a temporary hackathon prototype.
+
+The codebase should remain suitable for future open-source release and commercial development.
+
+---
+
+# Primary Objective
+
+Generate high-quality captions for uploaded videos in multiple writing styles.
+
+Current supported styles:
+
+- Formal
+- Sarcastic
+- Humorous-Tech
+- Humorous-NonTech
+
+The system should later support additional styles without modifying business logic.
+
+---
+
+# Core Principles
+
+- Clean Architecture
+- SOLID
+- DRY
+- KISS
+- Separation of Concerns
+- Configuration First
+- Dependency Injection
+- Strong Typing
+- Modular Design
+- Production Ready
+
+---
+
+# Technology Stack
+
+## Frontend
+
+React
+
+TypeScript
+
+Vite
+
+Tailwind CSS
+
+Framer Motion
+
+## Backend
+
+Python 3.12+
+
+FastAPI
+
+Pydantic v2
+
+HTTPX
+
+Uvicorn
+
+PyYAML
+
+Loguru
+
+## AI
+
+Fireworks AI
+
+Vision Language Models
+
+Prompt Engineering
+
+Structured Outputs
+
+Future Memory Layer
+
+Future Multi-Provider Support
+
+## Infrastructure
+
+Docker
+
+Docker Compose
+
+GitHub
+
+AMD Developer Cloud
+
+AMD GPU Compatible
+
+---
+
+# Repository Structure
+
+frontend/
+
+backend/
+
+docker/
+
+config/
+
+docs/
+
+tests/
+
+scripts/
+
+assets/
+
+.cursor/
+
+---
+
+# Current Development Phase
+
+Phase 0
+
+Engineering Foundation
+
+No production backend code has been written yet.
+
+Current focus:
+
+Engineering contracts
+
+Repository standards
+
+Architecture
+
+Project specifications
+
+---
+
+# Current Milestone
+
+Milestone 1
+
+Repository Foundation
+
+Objectives:
+
+- Backend skeleton
+- FastAPI initialization
+- Configuration system
+- Logging
+- Health endpoint
+- Docker foundation
+
+No AI implementation yet.
+
+---
+
+# Planned Milestones
+
+Milestone 1
+
+Repository Foundation
+
+↓
+
+Milestone 2
+
+Video Processing
+
+↓
+
+Milestone 3
+
+Scene Detection
+
+↓
+
+Milestone 4
+
+OCR
+
+↓
+
+Milestone 5
+
+Fireworks Vision
+
+↓
+
+Milestone 6
+
+Prompt Engine
+
+↓
+
+Milestone 7
+
+Caption Generator
+
+↓
+
+Milestone 8
+
+Judge
+
+↓
+
+Milestone 9
+
+Frontend Integration
+
+↓
+
+Milestone 10
+
+Optimization
+
+↓
+
+Milestone 11
+
+Testing
+
+↓
+
+Milestone 12
+
+Hackathon Submission
+
+---
+
+# AI Pipeline
+
+Video Upload
+
+↓
+
+Validation
+
+↓
+
+Metadata Extraction
+
+↓
+
+Scene Detection
+
+↓
+
+Frame Sampling
+
+↓
+
+OCR
+
+↓
+
+Vision Analysis
+
+↓
+
+Context Builder
+
+↓
+
+Prompt Generation
+
+↓
+
+Caption Generation
+
+↓
+
+Quality Judge
+
+↓
+
+Export
+
+---
+
+# Design Philosophy
+
+Every major capability must remain replaceable.
+
+Examples:
+
+Scene Detection
+
+OCR
+
+LLM Provider
+
+Embedding Provider
+
+Storage
+
+Export
+
+Future providers should require minimal code changes.
+
+---
+
+# Fireworks
+
+Fireworks is the current AI provider.
+
+Fireworks must only be accessed through:
+
+FireworksClient
+
+No other module should communicate directly with Fireworks.
+
+---
+
+# Backend Philosophy
+
+Routes remain thin.
+
+Business logic belongs in services.
+
+Services communicate through abstractions.
+
+Configuration controls behaviour.
+
+No hardcoded values.
+
+---
+
+# Frontend Philosophy
+
+Frontend displays state.
+
+Frontend never performs AI processing.
+
+Frontend never performs business logic.
+
+Frontend communicates only through backend APIs.
+
+---
+
+# Performance Goals
+
+Fast startup
+
+Low memory usage
+
+Low token usage
+
+Minimal API calls
+
+Minimal Docker image size
+
+Efficient frame processing
+
+Efficient prompt generation
+
+High throughput
+
+---
+
+# Security Goals
+
+No hardcoded secrets
+
+Input validation
+
+Output validation
+
+Safe uploads
+
+Path sanitization
+
+Minimal Docker permissions
+
+Protected API keys
+
+Structured logging
+
+---
+
+# Testing Goals
+
+Unit Tests
+
+Integration Tests
+
+End-to-End Tests
+
+Performance Tests
+
+Mock Fireworks
+
+Regression Tests
+
+---
+
+# Documentation Goals
+
+Every implementation updates:
+
+README
+
+API Documentation
+
+Architecture
+
+Development Log
+
+Decision Log
+
+Changelog
+
+Docstrings
+
+---
+
+# Repository Rules
+
+All development follows:
+
+00 Cursor Behavior Contract
+
+01 Architecture Contract
+
+02 Coding Standards
+
+03 Backend Contract
+
+04 Frontend Contract
+
+05 AI Pipeline Contract
+
+06 Fireworks Contract
+
+07 Security Contract
+
+08 Performance Contract
+
+09 Docker Contract
+
+10 Testing Contract
+
+11 Documentation Contract
+
+12 Hackathon Contract
+
+These contracts are mandatory.
+
+---
+
+# Current Priorities
+
+Priority 1
+
+Build solid backend architecture.
+
+Priority 2
+
+Integrate Fireworks correctly.
+
+Priority 3
+
+Replace frontend mock data.
+
+Priority 4
+
+Optimize Docker.
+
+Priority 5
+
+Benchmark performance.
+
+---
+
+# Non-Negotiable Rules
+
+Never hardcode captions.
+
+Never hardcode prompts.
+
+Never hardcode configuration.
+
+Never bypass FireworksClient.
+
+Never bypass architecture.
+
+Never ignore exceptions.
+
+Never skip logging.
+
+Never skip testing.
+
+Never skip documentation.
+
+---
+
+# Success Criteria
+
+The project is successful when:
+
+✓ Docker builds successfully
+
+✓ Backend starts successfully
+
+✓ Frontend connects successfully
+
+✓ Fireworks integration works
+
+✓ Multi-style captions are generated
+
+✓ Export works
+
+✓ Tests pass
+
+✓ Documentation is complete
+
+✓ No hardcoded outputs exist
+
+✓ Code follows every engineering contract
+
+---
+
+# Future Roadmap
+
+Authentication
+
+Projects
+
+History
+
+Cloud Storage
+
+Collaboration
+
+Translation
+
+Subtitle Export
+
+Analytics
+
+Fine-Tuning
+
+Offline Models
+
+Enterprise Deployment
+
+---
+
+# Cursor Mission
+
+Your mission is to help build CaptionDB as though you are the Lead Software Engineer of a production AI company.
+
+Every implementation should improve the long-term quality of the repository.
+
+Do not optimize for speed.
+
+Optimize for correctness, maintainability, security, performance, and engineering excellence.
+
+End of Project Context.

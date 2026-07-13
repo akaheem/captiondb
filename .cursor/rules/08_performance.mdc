@@ -1,0 +1,664 @@
+---
+description: CaptionDB Performance Engineering Contract
+globs:
+  - "backend/**"
+  - "frontend/**"
+  - "docker/**"
+  - "scripts/**"
+alwaysApply: true
+---
+
+# CaptionDB Performance Engineering Contract
+
+## Purpose
+
+This contract defines the mandatory performance engineering standards for CaptionDB.
+
+Performance is a first-class engineering concern.
+
+The objective is to maximize:
+
+- Throughput
+- Responsiveness
+- Resource efficiency
+- Scalability
+- Cost efficiency
+
+while maintaining correctness.
+
+---
+
+# Performance Philosophy
+
+Never optimize blindly.
+
+Measure first.
+
+Profile second.
+
+Optimize third.
+
+Verify improvements.
+
+Every optimization must have measurable benefits.
+
+---
+
+# Engineering Goals
+
+Optimize for:
+
+- Lower latency
+- Lower memory usage
+- Lower CPU utilization
+- Lower GPU idle time
+- Lower API token usage
+- Lower network overhead
+- Lower Docker image size
+- Faster startup
+- Faster processing
+- Better scalability
+
+---
+
+# Performance Principles
+
+Always:
+
+Avoid unnecessary work.
+
+Avoid repeated work.
+
+Avoid unnecessary allocations.
+
+Avoid unnecessary API requests.
+
+Avoid unnecessary disk operations.
+
+Avoid unnecessary serialization.
+
+---
+
+# Profiling
+
+Profile before optimization.
+
+Use profiling tools.
+
+Measure:
+
+CPU
+
+Memory
+
+Disk I/O
+
+Network
+
+Latency
+
+GPU utilization (where applicable)
+
+Never guess performance bottlenecks.
+
+---
+
+# Caching Philosophy
+
+Cache expensive operations only.
+
+Examples:
+
+Scene Detection
+
+OCR Results
+
+Video Metadata
+
+Embeddings
+
+Prompt Templates
+
+Configuration
+
+Vision Analysis
+
+Never cache mutable business state.
+
+---
+
+# Cache Rules
+
+Every cache should define:
+
+TTL
+
+Eviction policy
+
+Maximum size
+
+Cache key strategy
+
+Invalidation strategy
+
+Configuration driven.
+
+---
+
+# Memory Management
+
+Avoid unnecessary copies.
+
+Release large objects quickly.
+
+Stream large files when possible.
+
+Reuse allocated resources.
+
+Avoid loading entire videos into memory unless required.
+
+---
+
+# Video Processing
+
+Process videos incrementally.
+
+Avoid reading the same video multiple times.
+
+Reuse extracted metadata.
+
+Avoid duplicate frame extraction.
+
+---
+
+# Frame Sampling
+
+Frame extraction must be efficient.
+
+Avoid extracting frames that will never be used.
+
+Support configurable sampling strategies.
+
+Avoid redundant processing.
+
+---
+
+# OCR Optimization
+
+OCR should run only when enabled.
+
+Avoid OCR on duplicate frames.
+
+Cache OCR results.
+
+Skip empty scenes when appropriate.
+
+---
+
+# Fireworks Optimization
+
+Reduce:
+
+API calls
+
+Prompt size
+
+Image count
+
+Token usage
+
+Latency
+
+Reuse context whenever possible.
+
+Prefer batch operations where supported.
+
+---
+
+# Prompt Optimization
+
+Prompt templates should be concise.
+
+Avoid unnecessary instructions.
+
+Avoid duplicated context.
+
+Support reusable prompt fragments.
+
+Version prompts.
+
+---
+
+# Parallel Processing
+
+Parallelize only independent work.
+
+Examples:
+
+Independent scenes
+
+OCR
+
+Vision analysis
+
+Caption generation
+
+Avoid race conditions.
+
+Avoid excessive thread creation.
+
+---
+
+# Concurrency
+
+Concurrency should be configurable.
+
+Do not hardcode worker counts.
+
+Respect system resources.
+
+Avoid oversubscription.
+
+---
+
+# Async Programming
+
+Use asynchronous operations for:
+
+Network requests
+
+I/O
+
+External services
+
+Avoid async for CPU-bound work.
+
+---
+
+# Worker Management
+
+Background workers should:
+
+Reuse resources
+
+Limit concurrency
+
+Handle graceful shutdown
+
+Report metrics
+
+Avoid resource leaks.
+
+---
+
+# Resource Reuse
+
+Reuse:
+
+HTTP Clients
+
+Fireworks Clients
+
+OCR Engines
+
+Configuration
+
+Prompt Templates
+
+Avoid recreating expensive objects.
+
+---
+
+# Lazy Loading
+
+Load heavy resources only when needed.
+
+Examples:
+
+Models
+
+OCR
+
+Large configuration
+
+Embeddings
+
+Avoid unnecessary startup costs.
+
+---
+
+# Startup Performance
+
+Application startup should:
+
+Load configuration
+
+Validate environment
+
+Initialize required services
+
+Delay optional initialization.
+
+Target fast startup.
+
+---
+
+# Database Performance
+
+When persistence is introduced:
+
+Avoid N+1 queries.
+
+Use pagination.
+
+Index frequently queried fields.
+
+Avoid unnecessary joins.
+
+Use connection pooling.
+
+---
+
+# API Performance
+
+Minimize payload size.
+
+Compress responses when appropriate.
+
+Avoid unnecessary serialization.
+
+Return only required fields.
+
+---
+
+# Frontend Performance
+
+Support:
+
+Lazy loading
+
+Code splitting
+
+Memoization
+
+Efficient rendering
+
+Avoid unnecessary re-renders.
+
+---
+
+# Docker Performance
+
+Optimize:
+
+Layer caching
+
+Image size
+
+Dependency installation
+
+Startup
+
+Container memory usage
+
+Use multi-stage builds.
+
+---
+
+# Build Performance
+
+Leverage Docker cache.
+
+Pin dependency versions.
+
+Avoid rebuilding unchanged layers.
+
+Separate dependencies from application code.
+
+---
+
+# Logging Performance
+
+Avoid excessive logging.
+
+Use DEBUG only when necessary.
+
+Do not log inside tight loops unless required.
+
+---
+
+# Metrics
+
+Collect:
+
+Processing time
+
+Request latency
+
+Fireworks latency
+
+OCR latency
+
+Scene detection duration
+
+Frame extraction duration
+
+Export duration
+
+CPU
+
+Memory
+
+Cache hit ratio
+
+Token usage
+
+Retries
+
+Queue length
+
+---
+
+# Benchmarking
+
+Benchmark every major optimization.
+
+Compare:
+
+Before
+
+After
+
+Record measurable improvements.
+
+Never claim improvements without evidence.
+
+---
+
+# Scalability
+
+Design for:
+
+More videos
+
+Longer videos
+
+Multiple users
+
+Future GPU scaling
+
+Future distributed workers
+
+Avoid architecture that limits growth.
+
+---
+
+# Feature Flags
+
+Performance features should be configurable.
+
+Examples:
+
+Caching
+
+Parallelism
+
+OCR
+
+Memory
+
+Judge
+
+Batch processing
+
+Experimental optimizations
+
+---
+
+# Resource Limits
+
+Support configurable limits.
+
+Examples:
+
+Maximum upload size
+
+Maximum concurrent videos
+
+Maximum workers
+
+Maximum retries
+
+Maximum memory usage
+
+Maximum processing duration
+
+---
+
+# Observability
+
+Every performance-critical service should expose:
+
+Execution time
+
+Average latency
+
+Failure rate
+
+Retry count
+
+Memory usage
+
+CPU usage
+
+Throughput
+
+These metrics should support future monitoring.
+
+---
+
+# Optimization Workflow
+
+Before implementing optimization:
+
+Measure
+
+↓
+
+Identify bottleneck
+
+↓
+
+Design improvement
+
+↓
+
+Implement
+
+↓
+
+Benchmark
+
+↓
+
+Validate
+
+↓
+
+Document
+
+Never optimize blindly.
+
+---
+
+# Testing
+
+Performance-sensitive code should include:
+
+Benchmark tests
+
+Stress tests
+
+Load tests
+
+Memory tests
+
+Regression tests
+
+Performance improvements must not reduce correctness.
+
+---
+
+# Documentation
+
+Document:
+
+Performance assumptions
+
+Caching strategy
+
+Parallelism strategy
+
+Resource limits
+
+Optimization decisions
+
+Benchmark results
+
+---
+
+# Performance Review Checklist
+
+Before completing implementation verify:
+
+✓ No unnecessary work
+
+✓ Expensive operations cached
+
+✓ Resources reused
+
+✓ Async used correctly
+
+✓ Parallelism justified
+
+✓ Memory optimized
+
+✓ Startup optimized
+
+✓ Docker optimized
+
+✓ Metrics collected
+
+✓ Benchmarks performed
+
+✓ Scalability considered
+
+✓ Documentation updated
+
+✓ Tests added
+
+If any item fails, revise implementation before completion.
+
+---
+
+End of Performance Engineering Contract.

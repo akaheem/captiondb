@@ -1,0 +1,23 @@
+# Python caches / bytecode
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Virtual environments (incl. the local audit venv)
+.venv/
+.venv-audit/
+venv/
+env/
+
+# Test / coverage artifacts
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Local env & secrets
+.env
+
+# Tooling / VCS
+.git/
+*.log

@@ -1,0 +1,685 @@
+---
+description: CaptionDB AI Pipeline Engineering Contract
+globs:
+  - "backend/app/pipeline/**"
+  - "backend/app/services/**"
+  - "backend/app/plugins/**"
+  - "backend/app/workers/**"
+alwaysApply: true
+---
+
+# CaptionDB AI Pipeline Engineering Contract
+
+## Purpose
+
+This document defines the architecture and implementation rules for the AI pipeline.
+
+The AI pipeline is responsible for transforming an input video into high-quality captions while remaining modular, observable, configurable, and production-ready.
+
+The AI pipeline must never become tightly coupled to a specific model, provider, OCR engine, or scene detection implementation.
+
+---
+
+# Engineering Philosophy
+
+The AI pipeline must be:
+
+- Modular
+- Deterministic where appropriate
+- Configurable
+- Observable
+- Fault tolerant
+- Provider independent
+- Easy to benchmark
+- Easy to replace
+
+The pipeline should be viewed as an orchestration system rather than a single script.
+
+---
+
+# Pipeline Overview
+
+Every video should pass through the following stages.
+
+Video Input
+
+↓
+
+Validation
+
+↓
+
+Metadata Extraction
+
+↓
+
+Scene Detection
+
+↓
+
+Frame Sampling
+
+↓
+
+OCR (Optional)
+
+↓
+
+Visual Understanding
+
+↓
+
+Context Builder
+
+↓
+
+Prompt Generation
+
+↓
+
+Caption Generation
+
+↓
+
+Quality Evaluation
+
+↓
+
+Post Processing
+
+↓
+
+Export
+
+Each stage is independent.
+
+---
+
+# Pipeline Orchestrator
+
+The pipeline must be coordinated by a PipelineOrchestrator.
+
+Responsibilities:
+
+- execute stages
+- collect outputs
+- handle failures
+- collect metrics
+- emit events
+- manage retries
+
+No individual service should control pipeline execution.
+
+---
+
+# Stage Isolation
+
+Each stage should receive structured input and return structured output.
+
+Stages must not modify unrelated pipeline state.
+
+Avoid hidden side effects.
+
+---
+
+# Service Responsibilities
+
+Each major capability must exist as its own service.
+
+Examples:
+
+VideoService
+
+SceneDetectionService
+
+FrameSamplingService
+
+OCRService
+
+VisionService
+
+PromptService
+
+CaptionService
+
+JudgeService
+
+MemoryService
+
+ExportService
+
+MetricsService
+
+---
+
+# Plugin Architecture
+
+Every AI component must be replaceable.
+
+Examples:
+
+SceneDetector
+
+OCR Engine
+
+LLM Provider
+
+Embedding Provider
+
+Judge
+
+Exporter
+
+Future replacements should require minimal code changes.
+
+---
+
+# Configuration
+
+Pipeline behaviour must be configuration driven.
+
+Never hardcode:
+
+Frame count
+
+Confidence thresholds
+
+Temperatures
+
+Prompt versions
+
+Retry limits
+
+Model names
+
+Timeouts
+
+Chunk sizes
+
+Cache settings
+
+---
+
+# Video Validation
+
+Validate:
+
+Video format
+
+Duration
+
+Resolution
+
+Frame rate
+
+File size
+
+Reject unsupported videos before processing.
+
+---
+
+# Scene Detection
+
+Scene detection should remain abstract.
+
+Never hardcode a specific implementation.
+
+Allow future replacement without changing pipeline code.
+
+Scene detector should return:
+
+Scene ID
+
+Start Time
+
+End Time
+
+Confidence
+
+Metadata
+
+---
+
+# Frame Sampling
+
+Sampling strategy must be configurable.
+
+Support future strategies.
+
+Examples:
+
+Uniform
+
+Adaptive
+
+Keyframe
+
+Motion-aware
+
+Never assume a fixed number of frames.
+
+---
+
+# OCR
+
+OCR is optional.
+
+Pipeline must continue if OCR is disabled.
+
+OCR output should be normalized.
+
+Never tightly couple downstream stages to a specific OCR engine.
+
+---
+
+# Visual Understanding
+
+Visual analysis should receive:
+
+Frames
+
+Scene metadata
+
+OCR output
+
+Context
+
+Return structured scene understanding.
+
+Avoid returning raw text whenever possible.
+
+---
+
+# Prompt Generation
+
+Prompt generation belongs inside PromptService.
+
+Prompt text must never be hardcoded inside business logic.
+
+Prompt templates should be versioned.
+
+Support multiple prompt versions.
+
+---
+
+# Caption Generation
+
+Caption generation should support multiple styles.
+
+Current styles:
+
+Formal
+
+Sarcastic
+
+Humorous-Tech
+
+Humorous-NonTech
+
+Adding another style should require configuration only.
+
+---
+
+# Candidate Generation
+
+Support multiple candidate captions.
+
+Candidate count should be configurable.
+
+Do not hardcode the number of candidates.
+
+---
+
+# Quality Evaluation
+
+Quality evaluation should be independent.
+
+Judge should evaluate:
+
+Relevance
+
+Accuracy
+
+Style consistency
+
+Grammar
+
+Safety
+
+Completeness
+
+Judge should not generate captions.
+
+Judge only evaluates.
+
+---
+
+# Memory
+
+Memory should remain optional.
+
+Memory stores contextual information between scenes.
+
+Examples:
+
+Characters
+
+Objects
+
+Locations
+
+Previous actions
+
+Memory should improve consistency.
+
+Pipeline must function without memory enabled.
+
+---
+
+# Context Builder
+
+Context Builder merges:
+
+Scene information
+
+OCR
+
+Memory
+
+Metadata
+
+Prompt configuration
+
+Return structured context.
+
+Never concatenate strings throughout the application.
+
+---
+
+# Fireworks Independence
+
+The pipeline must never directly call Fireworks.
+
+Only FireworksClient may communicate with Fireworks.
+
+Pipeline depends on interfaces.
+
+---
+
+# Retry Policy
+
+Retry only transient failures.
+
+Examples:
+
+Timeout
+
+Temporary service unavailable
+
+Rate limit
+
+Do not retry:
+
+Validation errors
+
+Configuration errors
+
+Invalid input
+
+---
+
+# Timeouts
+
+Every AI request must have configurable timeout values.
+
+Never wait indefinitely.
+
+---
+
+# Metrics
+
+Collect metrics for every stage.
+
+Minimum metrics:
+
+Start time
+
+End time
+
+Duration
+
+Success
+
+Failure
+
+Retry count
+
+Memory usage
+
+API latency
+
+Token usage
+
+---
+
+# Logging
+
+Every stage logs:
+
+Started
+
+Completed
+
+Duration
+
+Warnings
+
+Failures
+
+Retries
+
+Never log prompts containing sensitive data.
+
+Never log API keys.
+
+---
+
+# Caching
+
+Cache only expensive computations.
+
+Examples:
+
+Scene detection
+
+OCR
+
+Embeddings
+
+Vision descriptions
+
+Prompt templates
+
+Cache must be configurable.
+
+---
+
+# Error Recovery
+
+If one stage fails:
+
+Determine whether recovery is possible.
+
+Continue processing whenever safe.
+
+Avoid failing the entire pipeline because of one recoverable error.
+
+---
+
+# Parallel Processing
+
+Independent scenes may process concurrently.
+
+Shared state must remain thread-safe.
+
+Avoid race conditions.
+
+Do not parallelize operations that depend on sequential context.
+
+---
+
+# Structured Data
+
+Every stage exchanges typed models.
+
+Never pass anonymous dictionaries between stages.
+
+Prefer Pydantic models or dataclasses.
+
+---
+
+# Extensibility
+
+Future additions should require minimal modification.
+
+Examples:
+
+Audio transcription
+
+Object detection
+
+Face recognition
+
+Embeddings
+
+Translation
+
+Subtitle generation
+
+Support future pipeline stages.
+
+---
+
+# Prompt Versioning
+
+Prompt templates should support versioning.
+
+Example:
+
+v1
+
+v2
+
+v3
+
+Never overwrite previous prompt versions.
+
+---
+
+# Feature Flags
+
+Support enabling or disabling:
+
+OCR
+
+Memory
+
+Judge
+
+Candidate Generation
+
+Caching
+
+Experimental prompts
+
+Configuration controls features.
+
+Never comment out code to disable functionality.
+
+---
+
+# AI Provider Independence
+
+The application should not depend on Fireworks.
+
+Support future providers.
+
+Examples:
+
+OpenAI
+
+Anthropic
+
+Local models
+
+AMD optimized deployments
+
+Only provider adapters should change.
+
+---
+
+# Testing
+
+Each stage must support isolated testing.
+
+Mock external providers.
+
+Avoid real API calls during unit tests.
+
+Integration tests should verify complete pipeline behaviour.
+
+---
+
+# Documentation
+
+Every pipeline stage should document:
+
+Purpose
+
+Input
+
+Output
+
+Dependencies
+
+Failure modes
+
+Configuration
+
+---
+
+# Self Review Checklist
+
+Before completing implementation verify:
+
+✓ Stage has one responsibility
+
+✓ Configuration driven
+
+✓ Typed models
+
+✓ Replaceable implementation
+
+✓ Proper logging
+
+✓ Metrics collected
+
+✓ Retry strategy
+
+✓ Timeout configured
+
+✓ Structured outputs
+
+✓ No hardcoded values
+
+✓ Documentation updated
+
+✓ Tests added
+
+✓ Compatible with architecture contract
+
+If any check fails, revise implementation before completion.
+
+---
+
+End of AI Pipeline Engineering Contract.

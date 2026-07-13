@@ -1,0 +1,594 @@
+---
+description: CaptionDB Documentation & Knowledge Management Engineering Contract
+globs:
+  - "**/*.py"
+  - "**/*.ts"
+  - "**/*.tsx"
+  - "docs/**"
+  - "README.md"
+alwaysApply: true
+---
+
+# CaptionDB Documentation Engineering Contract
+
+## Purpose
+
+This contract defines the documentation standards for CaptionDB.
+
+Documentation is a required engineering deliverable.
+
+No implementation is considered complete until its documentation is updated.
+
+---
+
+# Documentation Philosophy
+
+Documentation should answer:
+
+Why does this exist?
+
+What problem does it solve?
+
+How does it work?
+
+How can it be extended?
+
+Documentation should never become outdated.
+
+Update documentation whenever implementation changes.
+
+---
+
+# Required Documentation
+
+The repository must maintain:
+
+README.md
+
+PROJECT_SPEC.md
+
+ARCHITECTURE.md
+
+API_SPEC.md
+
+BACKEND_SPEC.md
+
+FRONTEND_SPEC.md
+
+SECURITY_SPEC.md
+
+PERFORMANCE_SPEC.md
+
+TESTING_SPEC.md
+
+DOCKER_SPEC.md
+
+DEVELOPMENT.md
+
+CHANGELOG.md
+
+DECISION_LOG.md
+
+---
+
+# README
+
+README is the public entry point.
+
+It must include:
+
+Project Overview
+
+Features
+
+Architecture
+
+Technology Stack
+
+Installation
+
+Quick Start
+
+Configuration
+
+Docker Usage
+
+Running Tests
+
+Repository Structure
+
+License
+
+Contributing
+
+Future Roadmap
+
+README should always reflect the latest project state.
+
+---
+
+# Architecture Documentation
+
+Architecture documentation should explain:
+
+System Overview
+
+Component Relationships
+
+Data Flow
+
+Pipeline
+
+Module Responsibilities
+
+Dependency Flow
+
+Future Extensions
+
+Architecture diagrams should remain consistent with implementation.
+
+---
+
+# API Documentation
+
+Every endpoint must include:
+
+Purpose
+
+Request Schema
+
+Response Schema
+
+Status Codes
+
+Error Responses
+
+Authentication (future)
+
+Example Requests
+
+Example Responses
+
+FastAPI OpenAPI documentation should remain complete.
+
+---
+
+# Backend Documentation
+
+Every backend module should document:
+
+Purpose
+
+Dependencies
+
+Inputs
+
+Outputs
+
+Failure Modes
+
+Configuration
+
+Extension Points
+
+---
+
+# Frontend Documentation
+
+Document:
+
+Pages
+
+Components
+
+Hooks
+
+Contexts
+
+API Services
+
+State Management
+
+Routing
+
+User Flows
+
+---
+
+# AI Pipeline Documentation
+
+Every stage must document:
+
+Purpose
+
+Input
+
+Output
+
+Dependencies
+
+Configuration
+
+Failure Recovery
+
+Metrics
+
+Examples
+
+---
+
+# Configuration Documentation
+
+Document every configuration option.
+
+Include:
+
+Name
+
+Purpose
+
+Type
+
+Default
+
+Required
+
+Example
+
+Never leave undocumented configuration.
+
+---
+
+# Code Documentation
+
+Every public:
+
+Class
+
+Function
+
+Method
+
+Module
+
+must contain:
+
+Description
+
+Parameters
+
+Returns
+
+Raises
+
+Examples (when appropriate)
+
+Use Google-style docstrings.
+
+---
+
+# Inline Comments
+
+Comments should explain WHY.
+
+Avoid comments explaining obvious code.
+
+Prefer self-documenting code.
+
+---
+
+# Decision Log
+
+Maintain a DECISION_LOG.md.
+
+Every significant engineering decision should record:
+
+Date
+
+Decision
+
+Reason
+
+Alternatives Considered
+
+Tradeoffs
+
+Expected Impact
+
+This prevents future confusion.
+
+---
+
+# Changelog
+
+Maintain CHANGELOG.md.
+
+Document:
+
+Added
+
+Changed
+
+Fixed
+
+Removed
+
+Deprecated
+
+Released
+
+Never overwrite previous entries.
+
+---
+
+# Development Log
+
+Maintain DEVELOPMENT.md.
+
+Track:
+
+Current Milestone
+
+Completed Tasks
+
+Pending Tasks
+
+Known Issues
+
+Future Work
+
+Repository Status
+
+---
+
+# Versioning
+
+Documentation should include version numbers where appropriate.
+
+Example:
+
+v1.0
+
+v1.1
+
+v2.0
+
+Avoid undocumented changes.
+
+---
+
+# Diagrams
+
+Prefer diagrams for:
+
+Architecture
+
+Pipeline
+
+Data Flow
+
+Module Interaction
+
+Deployment
+
+Keep diagrams synchronized with implementation.
+
+---
+
+# Examples
+
+Provide examples whenever practical.
+
+Examples should be:
+
+Complete
+
+Runnable
+
+Up-to-date
+
+Verified
+
+---
+
+# Error Documentation
+
+Document:
+
+Possible failures
+
+Recovery actions
+
+Known limitations
+
+Common troubleshooting steps
+
+Avoid undocumented behavior.
+
+---
+
+# Dependencies
+
+Document every major dependency.
+
+Include:
+
+Purpose
+
+Version
+
+Official Documentation
+
+Reason for Selection
+
+Alternatives
+
+---
+
+# Security Documentation
+
+Document:
+
+Security assumptions
+
+Input validation
+
+Secrets management
+
+Authentication roadmap
+
+Threat considerations
+
+Do not expose sensitive implementation details.
+
+---
+
+# Performance Documentation
+
+Document:
+
+Caching
+
+Parallelism
+
+Memory optimization
+
+Resource limits
+
+Benchmarks
+
+Performance assumptions
+
+---
+
+# Docker Documentation
+
+Document:
+
+Build
+
+Run
+
+Environment Variables
+
+Volumes
+
+Ports
+
+Health Checks
+
+Troubleshooting
+
+---
+
+# Testing Documentation
+
+Document:
+
+Testing strategy
+
+Test structure
+
+How to run tests
+
+Coverage expectations
+
+Mock strategy
+
+Sample test commands
+
+---
+
+# Prompt Documentation
+
+Prompt templates should include:
+
+Purpose
+
+Version
+
+Expected Inputs
+
+Expected Outputs
+
+Supported Models
+
+Notes
+
+Never leave prompt behavior undocumented.
+
+---
+
+# Repository Consistency
+
+Every new folder should contain documentation if its purpose is not immediately obvious.
+
+Avoid undocumented directories.
+
+---
+
+# Documentation Quality
+
+Documentation should be:
+
+Accurate
+
+Complete
+
+Concise
+
+Professional
+
+Consistent
+
+Avoid outdated examples.
+
+---
+
+# Documentation Review
+
+Whenever code changes:
+
+Review affected documentation.
+
+Update examples.
+
+Update diagrams if necessary.
+
+Update changelog.
+
+Update decision log if architecture changes.
+
+---
+
+# Documentation Checklist
+
+Before completing implementation verify:
+
+✓ README updated if required
+
+✓ API documentation updated
+
+✓ Architecture documentation updated
+
+✓ Code docstrings added
+
+✓ Configuration documented
+
+✓ Decision log updated
+
+✓ Changelog updated
+
+✓ Development log updated
+
+✓ Examples verified
+
+✓ Diagrams reviewed
+
+✓ Documentation consistent with implementation
+
+If any item fails, revise documentation before considering the implementation complete.
+
+---
+
+End of Documentation Engineering Contract.

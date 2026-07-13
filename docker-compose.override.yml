@@ -1,0 +1,25 @@
+version: '3.8'
+
+# This override file is automatically merged with docker-compose.yml by Docker Compose.
+# It modifies the production settings specifically for local development.
+
+services:
+  api:
+    # Enable Uvicorn hot-reloading for instant feedback during development
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+    environment:
+      # Switch environment back to development
+      - APP__ENVIRONMENT=development
+      # Expose verbose debugging logs (handled by loguru)
+      - LOGGING__LEVEL=debug
+      - LOGGING__FORMAT=text
+    volumes:
+      # Mount the local host source code into the container as read-only.
+      # This enables live-reloading without rebuilding the Docker image.
+      - ./backend/app:/app/app:ro
+      
+      # Use local bind-mounts instead of Docker named volumes for easy developer access.
+      # Developers can inspect files directly from their host OS.
+      - ./data/storage:/app/data/storage
+      - ./data/temp:/app/data/temp
+      - ./data/logs:/app/data/logs

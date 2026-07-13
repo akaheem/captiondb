@@ -1,0 +1,569 @@
+---
+description: CaptionDB Docker & Containerization Engineering Contract
+globs:
+  - "docker/**"
+  - "Dockerfile*"
+  - "docker-compose*.yml"
+  - ".github/workflows/**"
+alwaysApply: true
+---
+
+# CaptionDB Docker Engineering Contract
+
+## Purpose
+
+This contract defines the Docker, containerization, and deployment standards for CaptionDB.
+
+Docker is the official deployment mechanism for:
+
+- Local Development
+- AMD Developer Hackathon Submission
+- Production Deployment
+- Continuous Integration
+
+Every container must be reproducible, secure, portable, and optimized.
+
+---
+
+# Engineering Philosophy
+
+Docker containers are production artifacts.
+
+Never treat Docker as an afterthought.
+
+Every Dockerfile should be:
+
+- Reproducible
+- Minimal
+- Secure
+- Fast
+- Maintainable
+- Deterministic
+
+---
+
+# Container Strategy
+
+Separate containers by responsibility.
+
+Examples:
+
+Frontend
+
+Backend
+
+Future Database
+
+Future Redis
+
+Future Monitoring
+
+Never combine unrelated services into one image.
+
+---
+
+# Multi-Stage Builds
+
+Always use multi-stage builds.
+
+Separate:
+
+Builder
+
+↓
+
+Runtime
+
+Never ship development tooling inside production images.
+
+---
+
+# Base Images
+
+Prefer official images.
+
+Pin image versions.
+
+Never use:
+
+latest
+
+Example:
+
+python:3.12-slim
+
+instead of
+
+python:latest
+
+---
+
+# Image Size
+
+Minimize image size.
+
+Remove:
+
+Temporary files
+
+Package caches
+
+Unused build tools
+
+Unused libraries
+
+Keep production images lean.
+
+---
+
+# User Permissions
+
+Containers must never run as root.
+
+Create dedicated application users.
+
+Assign minimum required permissions.
+
+---
+
+# Working Directory
+
+Use explicit working directories.
+
+Example:
+
+/app
+
+Avoid relying on default directories.
+
+---
+
+# Dependency Installation
+
+Install only required dependencies.
+
+Separate:
+
+Development
+
+Production
+
+Testing
+
+Avoid unnecessary packages.
+
+---
+
+# Layer Optimization
+
+Maximize Docker layer caching.
+
+Order instructions:
+
+Base image
+
+↓
+
+Dependencies
+
+↓
+
+Configuration
+
+↓
+
+Application source
+
+↓
+
+Startup
+
+Avoid invalidating cache unnecessarily.
+
+---
+
+# Environment Variables
+
+Never hardcode:
+
+API Keys
+
+Secrets
+
+Passwords
+
+Tokens
+
+Model IDs
+
+URLs
+
+Configuration values
+
+Everything must come from environment variables or mounted configuration.
+
+---
+
+# Configuration
+
+Mount configuration when appropriate.
+
+Support:
+
+Development
+
+Testing
+
+Production
+
+Do not maintain separate Dockerfiles for every environment unless justified.
+
+---
+
+# Volumes
+
+Use volumes only when necessary.
+
+Examples:
+
+Uploads
+
+Logs
+
+Cache
+
+Future persistent storage
+
+Avoid writing application state inside the container filesystem.
+
+---
+
+# Networking
+
+Expose only required ports.
+
+Avoid unnecessary services.
+
+Use named Docker networks.
+
+Support future service isolation.
+
+---
+
+# Health Checks
+
+Every production container must define a health check.
+
+Health checks should verify:
+
+Application availability
+
+Required dependencies
+
+Configuration readiness
+
+Avoid expensive health checks.
+
+---
+
+# Startup
+
+Startup should:
+
+Validate configuration
+
+Initialize logging
+
+Verify required services
+
+Fail fast if critical dependencies are unavailable.
+
+---
+
+# Shutdown
+
+Support graceful shutdown.
+
+Close:
+
+Connections
+
+Workers
+
+Threads
+
+File handles
+
+Avoid corrupted state.
+
+---
+
+# Logging
+
+Write logs to stdout/stderr.
+
+Avoid writing logs inside the container filesystem.
+
+Container platforms should collect logs.
+
+---
+
+# Build Context
+
+Keep Docker build context minimal.
+
+Exclude:
+
+.git
+
+tests
+
+documentation
+
+cache
+
+temporary files
+
+node_modules
+
+Python cache
+
+Use .dockerignore.
+
+---
+
+# Docker Ignore
+
+Maintain a complete .dockerignore.
+
+Exclude unnecessary files to reduce build size and improve performance.
+
+---
+
+# Secrets
+
+Never copy secrets into Docker images.
+
+Never bake credentials into layers.
+
+Use runtime environment variables.
+
+---
+
+# Python Optimization
+
+Use:
+
+PYTHONDONTWRITEBYTECODE=1
+
+PYTHONUNBUFFERED=1
+
+Optimize dependency installation.
+
+---
+
+# Frontend Builds
+
+Frontend should build separately.
+
+Only production assets belong in production images.
+
+Development tooling must not ship.
+
+---
+
+# Backend Builds
+
+Backend should install only runtime dependencies.
+
+Development packages belong in development images only.
+
+---
+
+# Docker Compose
+
+Compose files should support:
+
+Development
+
+Production
+
+Future testing
+
+Separate concerns clearly.
+
+---
+
+# Restart Policy
+
+Define restart policies where appropriate.
+
+Avoid infinite restart loops during development.
+
+---
+
+# Resource Limits
+
+Support configurable:
+
+CPU
+
+Memory
+
+Workers
+
+Timeouts
+
+Future GPU allocation
+
+Do not hardcode resource assumptions.
+
+---
+
+# AMD GPU Compatibility
+
+Design containers to support AMD GPU environments.
+
+Avoid assumptions tied to CUDA.
+
+Keep GPU-specific configuration abstracted.
+
+Support future ROCm-compatible deployments where applicable.
+
+---
+
+# Fireworks Compatibility
+
+Fireworks credentials should be injected at runtime.
+
+Never bake provider configuration into the image.
+
+---
+
+# Security
+
+Run as non-root.
+
+Use minimal privileges.
+
+Avoid privileged containers.
+
+Avoid unnecessary Linux capabilities.
+
+Keep attack surface minimal.
+
+---
+
+# Image Reproducibility
+
+Pinned dependency versions.
+
+Pinned base images.
+
+Deterministic builds.
+
+Avoid downloading unpredictable resources during startup.
+
+---
+
+# CI/CD Compatibility
+
+Docker builds should execute successfully inside GitHub Actions.
+
+Avoid interactive build steps.
+
+Support automated testing.
+
+---
+
+# Performance
+
+Optimize:
+
+Image size
+
+Startup time
+
+Layer cache
+
+Dependency installation
+
+Cold start
+
+Memory footprint
+
+---
+
+# Testing
+
+Every Docker image should support:
+
+Build verification
+
+Startup verification
+
+Health check verification
+
+Smoke testing
+
+---
+
+# Documentation
+
+Document:
+
+Build commands
+
+Run commands
+
+Environment variables
+
+Volume mounts
+
+Ports
+
+Health checks
+
+Known limitations
+
+---
+
+# Docker Review Checklist
+
+Before completing implementation verify:
+
+✓ Multi-stage build
+
+✓ Minimal image
+
+✓ Non-root user
+
+✓ Pinned versions
+
+✓ No hardcoded secrets
+
+✓ Health check implemented
+
+✓ Environment variables configured
+
+✓ .dockerignore updated
+
+✓ Layer caching optimized
+
+✓ Logs written to stdout/stderr
+
+✓ Startup validated
+
+✓ Graceful shutdown supported
+
+✓ AMD-compatible design
+
+✓ Fireworks configuration externalized
+
+✓ Documentation updated
+
+If any item fails, revise the implementation before completion.
+
+---
+
+End of Docker Engineering Contract.
