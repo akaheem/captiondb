@@ -80,6 +80,20 @@ class DatabaseSettings(BaseSettings):
         return f"postgresql+asyncpg://{self.username}:{self.password}@{self.host}:{self.port}/{self.database}"
 
 
+    
+    # SSL/TLS future proofing
+    ssl_mode: str = "require"
+    
+    @property
+    def async_database_url(self) -> str:
+        return (
+        f"postgresql+asyncpg://"
+        f"{self.username}:{self.password}"
+        f"@{self.host}:{self.port}/{self.database}"
+        f"?ssl={self.ssl_mode}"
+    )
+
+
 class AIProviderSettings(BaseModel):
     """AI Provider configurations (credentials and routing)."""
     provider: Literal["fireworks", "openai", "gemini"] = "fireworks"
