@@ -54,11 +54,11 @@ class DatabaseSettings(BaseSettings):
     """Database connection and pooling settings."""
     model_config = SettingsConfigDict(env_prefix="DATABASE__")
     
-    host: str = "localhost"
+    host: str = "ep-lingering-brook-azd7eu5s.c-3.ap-southeast-1.aws.neon.tech"
     port: int = 5432
-    username: str = "postgres"
-    password: str = "postgres"
-    database: str = "captiondb"
+    username: str = "neondb_owner"
+    password: str = "npg_8hfGgq9ukSPx"
+    database: str = "neondb"
     
     # Connection Pool Settings
     pool_size: int = 20
