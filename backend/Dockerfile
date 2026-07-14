@@ -16,14 +16,12 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 WORKDIR /build
 
-# Copy project configuration for hatchling dependency resolution
 COPY pyproject.toml README.md ./
+COPY app ./app
 
-# Create an isolated virtual environment
 RUN python -m venv /opt/venv
 ENV PATH="/opt/venv/bin:$PATH"
 
-# Install production dependencies. We omit the [test] extra.
 RUN pip install --upgrade pip && pip install .
 
 # ==============================================================================
@@ -67,4 +65,7 @@ EXPOSE 8000
 HEALTHCHECK --interval=30s --timeout=5s --start-period=5s --retries=3 \
     CMD curl -f http://localhost:${PORT:-8000}/api/v1/health/live || exit 1
 # Start the application via Uvicorn
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "${PORT:-8000}"]
+CMD sh -c "python -m alembic upgrade head && uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-8000}"
+
+COPY --chown=captiondb:captiondb migrations ./migrations
+COPY --chown=captiondb:captiondb alembic.ini ./
