@@ -1,72 +1,81 @@
 # ==============================================================================
-# Stage 1: Builder
+# CaptionDB Production Dockerfile
 # ==============================================================================
-FROM python:3.12-slim AS builder
 
-# Set environment variables to optimize Python for building
+FROM python:3.12-slim
+
 ENV PYTHONUNBUFFERED=1 \
     PYTHONDONTWRITEBYTECODE=1 \
     PIP_NO_CACHE_DIR=1 \
-    PIP_DISABLE_PIP_VERSION_CHECK=1
-
-# Install build dependencies
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    build-essential \
-    && rm -rf /var/lib/apt/lists/*
-
-WORKDIR /build
-
-COPY pyproject.toml README.md ./
-COPY app ./app
-
-RUN python -m venv /opt/venv
-ENV PATH="/opt/venv/bin:$PATH"
-
-RUN pip install --upgrade pip && pip install .
-
-# ==============================================================================
-# Stage 2: Production
-# ==============================================================================
-FROM python:3.12-slim AS production
-
-# Set production environment variables
-ENV PYTHONUNBUFFERED=1 \
-    PYTHONDONTWRITEBYTECODE=1 \
-    PATH="/opt/venv/bin:$PATH"
-
-# Install curl for the Docker healthcheck and ffmpeg for metadata extraction
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    curl \
-    ffmpeg \
-    && rm -rf /var/lib/apt/lists/*
-
-# Create a non-root system user (UID/GID 10001) for security
-RUN groupadd -g 10001 captiondb && \
-    useradd -u 10001 -g captiondb -s /bin/false -m captiondb
-
-# Create volume mount points and assign permissions to the non-root user
-RUN mkdir -p /app/data/storage /app/data/temp /app/data/logs && \
-    chown -R captiondb:captiondb /app/data
+    PORT=8000
 
 WORKDIR /app
 
-# Copy the pre-built virtual environment from the builder stage
-COPY --from=builder --chown=captiondb:captiondb /opt/venv /opt/venv
+# ------------------------------------------------------------------------------
+# System dependencies
+# ------------------------------------------------------------------------------
 
-# Copy the application source code
-COPY --chown=captiondb:captiondb app ./app
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential \
+    ffmpeg \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
 
-# Drop root privileges immediately
+# ------------------------------------------------------------------------------
+# Copy project metadata first
+# ------------------------------------------------------------------------------
+
+COPY pyproject.toml ./
+COPY README.md ./
+
+# ------------------------------------------------------------------------------
+# Copy application
+# ------------------------------------------------------------------------------
+
+COPY app ./app
+COPY migrations ./migrations
+COPY alembic.ini ./
+
+# ------------------------------------------------------------------------------
+# Install Python dependencies
+# ------------------------------------------------------------------------------
+
+RUN pip install --upgrade pip
+RUN pip install .
+
+# ------------------------------------------------------------------------------
+# Create non-root user
+# ------------------------------------------------------------------------------
+
+RUN useradd -m captiondb
+
+RUN mkdir -p \
+    /app/data/storage \
+    /app/data/temp \
+    /app/data/logs
+
+RUN chown -R captiondb:captiondb /app
+
 USER captiondb
+
+# ------------------------------------------------------------------------------
+# Render exposes PORT
+# ------------------------------------------------------------------------------
 
 EXPOSE 8000
 
-# Liveness probe targeting the Phase 1.6 health endpoint
-HEALTHCHECK --interval=30s --timeout=5s --start-period=5s --retries=3 \
-    CMD curl -f http://localhost:${PORT:-8000}/api/v1/health/live || exit 1
-# Start the application via Uvicorn
-CMD sh -c "python -m alembic upgrade head && uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-8000}"
+# ------------------------------------------------------------------------------
+# Healthcheck
+# ------------------------------------------------------------------------------
 
 COPY --chown=captiondb:captiondb migrations ./migrations
-
 COPY --chown=captiondb:captiondb alembic.ini ./
+
+HEALTHCHECK --interval=30s --timeout=10s --start-period=20s --retries=3 \
+CMD curl -f http://localhost:${PORT}/api/v1/health/live || exit 1
+
+# ------------------------------------------------------------------------------
+# Startup
+# ------------------------------------------------------------------------------
+
+CMD sh -c "python -m alembic upgrade head && uvicorn app.main:app --host 0.0.0.0 --port ${PORT}"
