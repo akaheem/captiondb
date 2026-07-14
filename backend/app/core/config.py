@@ -68,7 +68,7 @@ class DatabaseSettings(BaseSettings):
     echo: bool = False
     
     # SSL/TLS future proofing
-    ssl_mode: str = "disable"
+    DATABASE__SSL_MODE:str = "require"
     
     @property
     def async_database_url(self) -> str:
