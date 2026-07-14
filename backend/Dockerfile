@@ -68,4 +68,5 @@ HEALTHCHECK --interval=30s --timeout=5s --start-period=5s --retries=3 \
 CMD sh -c "python -m alembic upgrade head && uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-8000}"
 
 COPY --chown=captiondb:captiondb migrations ./migrations
+
 COPY --chown=captiondb:captiondb alembic.ini ./
