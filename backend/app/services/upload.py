@@ -4,7 +4,7 @@ Orchestrates the logical flow of video ingestion.
 Strictly decoupled from HTTP (FastAPI) and raw infrastructure (Filesystem/S3).
 """
 import uuid
-from typing import Optional, List
+from typing import Any, Optional, AsyncIterator, List
 from dataclasses import dataclass
 from loguru import logger
 
