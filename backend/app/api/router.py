@@ -1,16 +1,21 @@
-v1_router = APIRouter()
+"""
+Global API Router.
+Aggregates all API versions into a single router.
+This keeps main.py entirely free of endpoint registration logic.
+"""
+from fastapi import APIRouter
+from app.core.config import get_settings
+from app.api.v1.router import v1_router
 
-# Keep only this
-v1_router.include_router(system.router, tags=["system"])
+# Future imports:
+# from app.api.v2.router import v2_router
 
-# Temporarily disable everything else
-# v1_router.include_router(upload_router, prefix="/upload", tags=["upload"])
-# v1_router.include_router(projects_router, prefix="/projects", tags=["projects"])
-# v1_router.include_router(processing_router, prefix="/processing", tags=["processing"])
-# v1_router.include_router(captions_router, prefix="/captions", tags=["captions"])
-# v1_router.include_router(exports_router, prefix="/exports", tags=["exports"])
-# v1_router.include_router(users_router, prefix="/users", tags=["users"])
-# v1_router.include_router(admin_router, prefix="/admin", tags=["admin"])
-# v1_router.include_router(tasks_router, tags=["tasks"])
-# v1_router.include_router(auth_router, prefix="/auth", tags=["auth"])
-# v1_router.include_router(sessions_router, prefix="/auth/sessions", tags=["auth", "sessions"])
+global_api_router = APIRouter()
+settings = get_settings()
+
+# Register API v1
+# We inject the prefix from settings (e.g., "/api/v1") here.
+global_api_router.include_router(v1_router, prefix=settings.api.v1_prefix)
+
+# Future:
+# global_api_router.include_router(v2_router, prefix=settings.api.v2_prefix)
