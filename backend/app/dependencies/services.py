@@ -1,4 +1,4 @@
-from fastapi import Depends
+from fastapi import Depends, Request, HTTPException, status
 
 from app.core.config import Settings, get_settings
 
@@ -382,7 +382,7 @@ def get_authorization_service(
     )
 
 
-def get_request_context(request: "Request") -> "RequestContext":
+def get_request_context(request: Request) -> "RequestContext":
     """
     FastAPI dependency that reads the RequestContext attached by
     AuthenticationMiddleware.
@@ -390,7 +390,7 @@ def get_request_context(request: "Request") -> "RequestContext":
     Returns an anonymous context when no token was provided.
     Never raises — callers decide whether authentication is required.
     """
-    from fastapi import Request
+    
     from app.domain.models.request_context import RequestContext
     ctx = getattr(request.state, "auth_context", None)
     if ctx is None:
@@ -399,7 +399,7 @@ def get_request_context(request: "Request") -> "RequestContext":
 
 
 def get_current_user(
-    request: "Request",
+    request: Request,
     context: "RequestContext" = Depends(get_request_context),
 ) -> "User":
     """
@@ -412,7 +412,7 @@ def get_current_user(
 
     Inject this into any endpoint that requires authentication.
     """
-    from fastapi import Request, HTTPException, status
+
     from app.domain.models.request_context import RequestContext
 
     if not context.is_authenticated or context.user is None:
