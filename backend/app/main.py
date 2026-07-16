@@ -132,7 +132,17 @@ def create_app() -> FastAPI:
         }
         app.openapi_schema = schema
         return schema
+    
+    from fastapi.routing import APIRoute
 
+    for route in app.routes:
+        if isinstance(route, APIRoute):
+            try:
+                route.dependant
+                print(f"OK: {route.path}")
+            except Exception as e:
+                print(f"BROKEN: {route.path}")
+                raise
     app.openapi = _custom_openapi
 
     # Register global API router (versioning prefixes are handled internally)
