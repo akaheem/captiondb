@@ -7,7 +7,8 @@
 
 export const API_CONFIG = {
   baseUrl:
-    process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:8000/api/v1",
+    // process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:8000/api/v1",
+    process.env.NEXT_PUBLIC_API_BASE_URL ?? "https://captiondb.onrender.com/api/v1",
   timeout: Number(process.env.NEXT_PUBLIC_API_TIMEOUT ?? 10_000),
   retries: 2,
 } as const;
