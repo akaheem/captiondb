@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8"><style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--green:#17603a;--green-d:#0e4f2b;--pink:#f2547d;--pink-d:#e63d68;--blush:#fdecee;--ink:#0f1211}
+body{font-family:'Segoe UI',Arial,sans-serif;background:var(--blush);color:#222}
+.serif{font-family:Georgia,'Times New Roman',serif}
+/* top strip */
+.strip{background:var(--green-d);color:#fff;display:flex;align-items:center;justify-content:center;gap:38px;padding:14px 60px;font-size:13px}
+.strip .item{display:flex;align-items:center;gap:8px;opacity:.92}
+.strip .dot{color:#f2547d;font-weight:700}
+.logo-pill{background:var(--pink);color:#fff;padding:14px 34px;border-radius:10px;font-weight:700;font-size:20px;font-family:Georgia,serif;font-style:italic;box-shadow:0 8px 20px rgba(242,84,125,.4)}
+/* nav */
+.navwrap{background:var(--green-d);padding:0 60px 0}
+.nav{background:#fff;border-radius:6px;display:flex;align-items:center;justify-content:center;gap:34px;padding:18px 30px;position:relative;top:0;box-shadow:0 10px 30px rgba(0,0,0,.15)}
+.nav a{color:#233;text-decoration:none;font-size:15px;font-weight:500}
+.nav a.active{color:var(--pink)}
+.btn{display:inline-block;background:var(--pink);color:#fff;border:none;padding:13px 28px;border-radius:5px;font-weight:600;font-size:14px;text-decoration:none;box-shadow:0 6px 16px rgba(242,84,125,.35)}
+.nav .btn{margin-left:26px;padding:11px 22px}
+/* hero */
+.hero{background:linear-gradient(120deg,var(--green-d) 0%,var(--green) 70%);display:flex;min-height:520px;position:relative;overflow:hidden}
+.hero::before{content:"";position:absolute;left:-120px;top:-120px;width:420px;height:420px;border-radius:50%;background:rgba(255,255,255,.05)}
+.hero::after{content:"❝";position:absolute;left:46%;bottom:-40px;font-size:280px;color:rgba(255,255,255,.06);font-family:Georgia,serif}
+.hero-left{flex:1.1;padding:90px 40px 90px 80px;color:#fff;position:relative;z-index:2}
+.hero-left h1{font-family:Georgia,serif;font-weight:500;font-size:58px;line-height:1.18}
+.hero-left .type{color:#ffd9e2;border-right:3px solid var(--pink);padding-right:6px}
+.hero-left p{margin-top:22px;font-size:16px;opacity:.85;max-width:480px;line-height:1.7}
+.hero-left .btn{margin-top:34px}
+.hero-right{flex:1;position:relative}
+.frame{position:absolute;inset:60px 60px 60px 0;background:linear-gradient(135deg,#123c26,#1d7a49);border-radius:8px;box-shadow:0 30px 60px rgba(0,0,0,.35);overflow:hidden}
+.frame .sky{position:absolute;inset:0;background:linear-gradient(180deg,#2f9e63 0%,#16552f 100%)}
+.frame .play{position:absolute;top:38%;left:44%;width:84px;height:84px;border-radius:50%;background:rgba(255,255,255,.15);border:2px solid rgba(255,255,255,.6);display:flex;align-items:center;justify-content:center;font-size:30px;color:#fff}
+.frame .capbar{position:absolute;left:24px;right:24px;bottom:24px;background:rgba(0,0,0,.55);border-left:4px solid var(--pink);border-radius:6px;padding:14px 18px;color:#fff;font-size:15px}
+.frame .capbar b{color:#ff9db6;font-size:11px;letter-spacing:2px;display:block;margin-bottom:5px}
+.frame .scenes{position:absolute;top:24px;left:24px;display:flex;gap:8px}
+.frame .scenes span{width:54px;height:34px;border-radius:4px;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.35)}
+.frame .scenes span.on{border:2px solid var(--pink);background:rgba(242,84,125,.35)}
+/* features */
+.features{padding:90px 80px 40px;text-align:center}
+.kicker{color:var(--pink);letter-spacing:3px;font-size:13px;font-weight:700}
+.features h2{font-family:Georgia,serif;font-weight:500;font-size:42px;margin:14px auto 70px;max-width:560px;line-height:1.3}
+.cards{display:flex;gap:26px;justify-content:center;align-items:flex-start}
+.card{background:#fff;width:270px;padding:70px 26px 26px;position:relative;text-align:left;box-shadow:0 14px 34px rgba(203,86,120,.12)}
+.card:nth-child(even){margin-top:56px}
+.icon{position:absolute;top:-26px;left:-14px;width:64px;height:64px;background:var(--pink);display:flex;align-items:center;justify-content:center;font-size:26px;color:#fff;box-shadow:0 10px 24px rgba(242,84,125,.4)}
+.card:nth-child(even) .icon{background:#fff;color:var(--green)}
+.card h3{font-family:Georgia,serif;font-size:19px;margin-bottom:14px}
+.card p{font-size:13.5px;color:#666;line-height:1.75}
+.num{display:block;text-align:right;color:var(--pink);font-size:30px;font-weight:700;margin-top:16px}
+/* about */
+.about{padding:80px}
+.about-in{background:#fff;display:flex;box-shadow:0 20px 50px rgba(203,86,120,.12)}
+.about-l{flex:1.1;padding:60px}
+.about-l h2{font-family:Georgia,serif;font-size:34px;font-weight:500;margin-bottom:24px}
+.about-l p{color:#666;font-size:14.5px;line-height:1.8;margin-bottom:16px}
+.about-r{flex:1;background:linear-gradient(135deg,#194f31,#2b8a55);position:relative;min-height:380px}
+.about-r .tag{position:absolute;left:0;bottom:46px;background:var(--green-d);color:#fff;padding:18px 34px;font-family:Georgia,serif;font-size:20px}
+.about-r .glyph{position:absolute;top:60px;right:60px;font-size:110px;opacity:.25}
+/* cta */
+.cta{margin:20px 80px 90px;background:var(--green-d);display:flex;align-items:center;position:relative;overflow:hidden}
+.cta .thumb{width:300px;height:170px;background:linear-gradient(135deg,#2b8a55,#123c26);position:relative}
+.cta .thumb::after{content:"▶";position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,.7);font-size:34px}
+.cta .badge{position:absolute;left:272px;top:50%;transform:translateY(-50%);width:58px;height:58px;background:var(--pink);display:flex;align-items:center;justify-content:center;color:#fff;font-size:24px;box-shadow:0 10px 24px rgba(242,84,125,.5)}
+.cta h2{flex:1;color:#fff;font-family:Georgia,serif;font-weight:500;font-size:32px;padding:0 60px 0 90px}
+.cta .btn{margin-right:50px}
+.cta .ghost{position:absolute;right:180px;font-family:Georgia,serif;font-size:64px;color:rgba(255,255,255,.06);font-style:italic}
+/* tones */
+.tones{padding:0 80px 100px;text-align:center}
+.tones h2{font-family:Georgia,serif;font-weight:500;font-size:40px;margin:14px 0 60px}
+.tone-cards{display:flex;gap:22px;justify-content:center}
+.tone{background:#fff;width:230px;box-shadow:0 14px 34px rgba(203,86,120,.12);text-align:left}
+.tone .pic{height:150px;background:linear-gradient(135deg,#1c6b40,#39a56b);display:flex;align-items:center;justify-content:center;font-size:44px}
+.tone:nth-child(2) .pic{background:linear-gradient(135deg,#f2547d,#f78ba7)}
+.tone:nth-child(4) .pic{background:linear-gradient(135deg,#f2547d,#f78ba7)}
+.tone .body{padding:20px;margin:-24px 14px 0;background:#fff;position:relative;box-shadow:0 -6px 18px rgba(0,0,0,.05)}
+.tone h3{font-family:Georgia,serif;font-size:18px}
+.tone .lbl{color:var(--pink);font-size:12px;font-weight:700;margin-top:6px;display:block}
+.tone p{font-size:12.5px;color:#777;line-height:1.6;margin-top:10px;font-style:italic}
+/* footer */
+footer{background:var(--ink);color:#cfcfcf;padding:70px 80px 0}
+.fcols{display:flex;gap:80px}
+.fcols .c1{flex:1.2}
+.fcols h4{color:#fff;font-family:Georgia,serif;font-size:18px;margin-bottom:22px}
+.fcols p,.fcols li{font-size:13.5px;line-height:2;list-style:none;color:#b9b9b9}
+.socials{display:flex;gap:12px;margin-top:20px}
+.socials span{width:36px;height:36px;border-radius:50%;background:#1e1e1e;display:flex;align-items:center;justify-content:center;font-size:14px;color:#fff}
+.copy{border-top:1px solid #262626;margin-top:50px;padding:22px;text-align:center;font-size:12.5px;color:#8a8a8a}
+.pinkrow{color:var(--pink)}
+</style></head><body>
+
+<div class="strip">
+  <div class="item">📶 <b>API</b> /api/v1 · online</div><span class="dot">/</span>
+  <div class="item">📧 hello@captiondb.app</div><span class="dot">/</span>
+  <div class="logo-pill">🎬 CaptionDB</div><span class="dot">/</span>
+  <div class="item">📍 Powered by Vision AI</div><span class="dot">/</span>
+  <div class="item">🕐 Processes 24/7</div>
+</div>
+<div class="navwrap"><div class="nav">
+  <a class="active" href="#">Home</a><a href="#">About</a><a href="#">Features</a><a href="#">Pricing</a><a href="#">Login</a><a href="#">Signup</a>
+  <a class="btn" href="#">Get Started ➜</a>
+</div></div>
+
+<div class="hero">
+  <div class="hero-left">
+    <h1 class="serif">Captions That<br>Understand<br><span class="type">Every Scene</span></h1>
+    <p>Upload any video and CaptionDB detects scenes, analyzes keyframes with vision AI, and writes captions in five distinct tones — formal to sarcastic.</p>
+    <a class="btn" href="#">Upload Your Video ➜</a>
+  </div>
+  <div class="hero-right">
+    <div class="frame">
+      <div class="sky"></div>
+      <div class="scenes"><span class="on"></span><span></span><span></span><span></span></div>
+      <div class="play">▶</div>
+      <div class="capbar"><b>SCENE 02 · FORMAL</b>A presenter walks across the stage as the audience applauds warmly.</div>
+    </div>
+  </div>
+</div>
+
+<div class="features">
+  <div class="kicker">OUR PIPELINE</div>
+  <h2>Everything in AI Video Captioning</h2>
+  <div class="cards">
+    <div class="card"><div class="icon">⬆</div><h3>Upload &amp; Analyze</h3><p>Drop in MP4, MOV, AVI or WebM up to 500&nbsp;MB. We instantly extract duration, FPS, codec and resolution.</p><span class="num">01</span></div>
+    <div class="card"><div class="icon">🎬</div><h3>Scene Detection</h3><p>Smart shot-boundary detection splits your video into meaningful scenes with precise timestamps.</p><span class="num">02</span></div>
+    <div class="card"><div class="icon">👁</div><h3>Vision AI Analysis</h3><p>Keyframes are analyzed by a vision language model — objects, activities, colors and on-screen text.</p><span class="num">03</span></div>
+    <div class="card"><div class="icon">✍</div><h3>Five Caption Tones</h3><p>Every scene gets captions in formal, sarcastic, humorous-tech, humorous and audio-description styles.</p><span class="num">04</span></div>
+  </div>
+</div>
+
+<div class="about"><div class="about-in">
+  <div class="about-l">
+    <h2 class="serif">About CaptionDB</h2>
+    <p>CaptionDB is an AI captioning platform where creators upload videos and receive scene-by-scene captions written by vision language models. Our goal is to make video accessibility and content repurposing simple, fast and delightful.</p>
+    <p>Create a project, watch the pipeline process each stage live, then browse every scene with its transcript, tags and five caption styles — ready to copy or export.</p>
+    <a class="btn" href="#">Explore Features</a>
+  </div>
+  <div class="about-r"><div class="glyph">🎥</div><div class="tag serif">Detect • Caption • Deliver</div></div>
+</div></div>
+
+<div class="cta">
+  <div class="thumb"></div><div class="badge">🎬</div>
+  <h2 class="serif">Ready To Caption<br>Your First Video?</h2>
+  <div class="ghost">captions</div>
+  <a class="btn" href="#">Upload Now</a>
+</div>
+
+<div class="tones">
+  <div class="kicker">CAPTION STYLES</div>
+  <h2 class="serif">Meet The Five Tones</h2>
+  <div class="tone-cards">
+    <div class="tone"><div class="pic">🏛</div><div class="body"><h3 class="serif">Formal</h3><span class="lbl">Professional</span><p>"A presenter demonstrates the product to an attentive audience."</p></div></div>
+    <div class="tone"><div class="pic">😏</div><div class="body"><h3 class="serif">Sarcastic</h3><span class="lbl">Witty</span><p>"Ah yes, another riveting slide of bullet points. Groundbreaking."</p></div></div>
+    <div class="tone"><div class="pic">🤓</div><div class="body"><h3 class="serif">Humorous Tech</h3><span class="lbl">For Devs</span><p>"POV: the demo works and nobody knows why. Ship it."</p></div></div>
+    <div class="tone"><div class="pic">😂</div><div class="body"><h3 class="serif">Humorous</h3><span class="lbl">For Everyone</span><p>"That moment when the coffee kicks in mid-presentation."</p></div></div>
+    <div class="tone"><div class="pic">🔊</div><div class="body"><h3 class="serif">Audio</h3><span class="lbl">Accessibility</span><p>"[Upbeat music] Footsteps on stage. Audience applause swells."</p></div></div>
+  </div>
+</div>
+
+<footer>
+  <div class="fcols">
+    <div class="c1"><div class="logo-pill" style="display:inline-block;padding:12px 26px;font-size:17px">🎬 CaptionDB</div>
+      <p style="margin-top:22px;max-width:300px">AI-powered scene detection and multi-tone caption generation for every video you create.</p>
+      <h4 style="margin-top:26px">Follow Us</h4>
+      <div class="socials"><span>𝕏</span><span>f</span><span>in</span><span>▶</span></div>
+    </div>
+    <div><h4>Product</h4><li>Upload Videos</li><li>Scene Detection</li><li>Caption Tones</li><li>API Access</li></div>
+    <div><h4>Contact</h4><li>📧 hello@captiondb.app</li><li>📍 api/v1 · REST + OpenAPI</li>
+      <h4 style="margin-top:24px">Processing Hours</h4><li>Always on — 24 / 7</li><li class="pinkrow">Avg. video: under 3 min</li></div>
+  </div>
+  <div class="copy">© All Copyright 2026 by CaptionDB</div>
+</footer>
+</body></html>

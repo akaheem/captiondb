@@ -3,6 +3,7 @@ Upload Service.
 Orchestrates the logical flow of video ingestion.
 Strictly decoupled from HTTP (FastAPI) and raw infrastructure (Filesystem/S3).
 """
+import re
 import uuid
 from typing import Any, Optional, AsyncIterator, List
 from dataclasses import dataclass
@@ -23,6 +24,16 @@ class UploadResult:
     success: bool
     video: Optional[Video] = None
     errors: Optional[List[str]] = None
+
+
+def _slugify_path_segment(value: str) -> str:
+    """
+    Converts an arbitrary display string (e.g. a project name with spaces)
+    into a storage-safe path segment matching StorageService's safe-character
+    policy (alphanumeric, underscores, hyphens, periods).
+    """
+    slug = re.sub(r"[^\w\-.]+", "-", value.strip()).strip("-.")
+    return slug or "untitled"
 
 
 class UploadService:
@@ -66,8 +77,10 @@ class UploadService:
         # Step 1: Create a preliminary aggregate root with a logical ID
         video_id = str(uuid.uuid4())
         
-        # We assign a preliminary logical path so validators (like PathValidator) can check it
-        temp_logical_path = f"projects/{project_name}/uploads/{video_id}/{original_filename}"
+        # We assign a preliminary logical path so validators (like PathValidator) can check it.
+        # The project name is slugified for the path — the display name keeps its original form.
+        project_slug = _slugify_path_segment(project_name)
+        temp_logical_path = f"projects/{project_slug}/uploads/{video_id}/{original_filename}"
         
         video = Video(
             id=video_id,
@@ -85,7 +98,7 @@ class UploadService:
             
         # Step 3 & 4: Persist the bytes logically, isolating infrastructure
         extension = original_filename.split('.')[-1] if '.' in original_filename else "bin"
-        prefix = f"projects/{project_name}/uploads"
+        prefix = f"projects/{project_slug}/uploads"
         
         if isinstance(content, bytes):
             file_result = await self._file_manager.create_logical_file(

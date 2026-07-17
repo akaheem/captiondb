@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8"><style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--green:#17603a;--green-d:#0e4f2b;--pink:#f2547d;--blush:#fdecee}
+body{font-family:'Segoe UI',Arial,sans-serif;background:var(--blush)}
+.serif{font-family:Georgia,serif}
+.shell{display:flex;min-height:100vh}
+/* sidebar */
+.sb{width:250px;background:var(--green-d);color:#fff;padding:26px 0;display:flex;flex-direction:column}
+.sb .logo{background:var(--pink);margin:0 22px 34px;padding:12px;border-radius:8px;text-align:center;font-family:Georgia,serif;font-style:italic;font-weight:700;font-size:17px}
+.sb a{display:flex;align-items:center;gap:12px;padding:13px 28px;color:#cfe6d7;text-decoration:none;font-size:14px}
+.sb a.on{background:rgba(242,84,125,.18);color:#fff;border-left:4px solid var(--pink)}
+.sb .grow{flex:1}
+.sb .user{margin:0 22px;padding:14px;background:rgba(0,0,0,.25);border-radius:8px;display:flex;gap:10px;align-items:center;font-size:13px}
+.sb .av{width:34px;height:34px;border-radius:50%;background:var(--pink);display:flex;align-items:center;justify-content:center;font-weight:700}
+/* main */
+.main{flex:1;padding:34px 40px}
+.head{display:flex;align-items:center;justify-content:space-between;margin-bottom:26px}
+.head h1{font-family:Georgia,serif;font-weight:500;font-size:30px}
+.head .kicker{color:var(--pink);letter-spacing:3px;font-size:11px;font-weight:700}
+.btn{background:var(--pink);color:#fff;border:none;padding:13px 24px;border-radius:6px;font-weight:700;font-size:14px;box-shadow:0 8px 20px rgba(242,84,125,.3)}
+/* stats */
+.stats{display:flex;gap:20px;margin-bottom:28px}
+.stat{flex:1;background:#fff;padding:22px;position:relative;box-shadow:0 10px 26px rgba(203,86,120,.1)}
+.stat .ic{position:absolute;top:-16px;left:-10px;width:46px;height:46px;background:var(--pink);color:#fff;display:flex;align-items:center;justify-content:center;font-size:19px;box-shadow:0 8px 18px rgba(242,84,125,.35)}
+.stat:nth-child(even) .ic{background:var(--green)}
+.stat h3{font-size:30px;margin:16px 0 4px;font-family:Georgia,serif}
+.stat span{font-size:12.5px;color:#888}
+/* filters */
+.filters{display:flex;gap:12px;align-items:center;margin-bottom:22px}
+.filters input{flex:1;padding:12px 16px;border:1.5px solid #f0dde2;border-radius:6px;background:#fff;font-size:14px}
+.chip{padding:9px 18px;border-radius:20px;font-size:13px;background:#fff;border:1.5px solid #f0dde2;color:#555}
+.chip.on{background:var(--green-d);color:#fff;border-color:var(--green-d)}
+/* grid */
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+.pcard{background:#fff;box-shadow:0 12px 30px rgba(203,86,120,.1)}
+.pcard .thumb{height:150px;background:linear-gradient(135deg,#1c6b40,#39a56b);position:relative}
+.pcard:nth-child(2) .thumb{background:linear-gradient(135deg,#f2547d,#f98fab)}
+.pcard:nth-child(3) .thumb{background:linear-gradient(135deg,#0e4f2b,#17603a)}
+.pcard .thumb::after{content:"▶";position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,.75);font-size:30px}
+.pcard .dur{position:absolute;right:10px;bottom:10px;background:rgba(0,0,0,.6);color:#fff;font-size:11px;padding:3px 8px;border-radius:4px}
+.pill{position:absolute;top:10px;left:10px;font-size:11px;font-weight:700;padding:5px 12px;border-radius:20px}
+.done{background:#e6f7ec;color:#17603a}.proc{background:#fff3cd;color:#8a6d00}.fail{background:#fde2e6;color:#c22f4f}.idle{background:#eee;color:#666}
+.pcard .body{padding:18px 20px 20px}
+.pcard h3{font-family:Georgia,serif;font-size:17px;margin-bottom:6px}
+.pcard .meta{font-size:12px;color:#999;margin-bottom:14px}
+.pcard .acts{display:flex;gap:8px}
+.mini{flex:1;padding:9px;font-size:12px;border-radius:5px;border:1.5px solid #f0dde2;background:#fff;color:#444;text-align:center;font-weight:600}
+.mini.p{background:var(--pink);border-color:var(--pink);color:#fff}
+.bar{height:5px;background:#f4e3e7;border-radius:3px;margin-bottom:12px;overflow:hidden}
+.bar i{display:block;height:100%;width:62%;background:linear-gradient(90deg,var(--pink),#ff8fab)}
+.pgn{display:flex;justify-content:center;gap:8px;margin-top:30px}
+.pg{width:36px;height:36px;border-radius:6px;background:#fff;border:1.5px solid #f0dde2;display:flex;align-items:center;justify-content:center;font-size:13px;color:#555}
+.pg.on{background:var(--pink);border-color:var(--pink);color:#fff}
+</style></head><body>
+<div class="shell">
+  <div class="sb">
+    <div class="logo">🎬 CaptionDB</div>
+    <a class="on" href="#">▦ Dashboard</a><a href="#">⬆ Upload Video</a><a href="#">🎬 Projects</a><a href="#">👤 Profile</a><a href="#">🖥 Sessions</a>
+    <div class="grow"></div>
+    <div class="user"><div class="av">M</div><div><b>mibra</b><br><span style="opacity:.7;font-size:11.5px">user · verified ✓</span></div></div>
+  </div>
+  <div class="main">
+    <div class="head">
+      <div><div class="kicker">YOUR WORKSPACE</div><h1 class="serif">Project Dashboard</h1></div>
+      <button class="btn">＋ New Upload</button>
+    </div>
+    <div class="stats">
+      <div class="stat"><div class="ic">🎬</div><h3>12</h3><span>Total Projects</span></div>
+      <div class="stat"><div class="ic">✓</div><h3>9</h3><span>Completed</span></div>
+      <div class="stat"><div class="ic">⚙</div><h3>1</h3><span>Processing Now</span></div>
+      <div class="stat"><div class="ic">✍</div><h3>420</h3><span>Captions Generated</span></div>
+    </div>
+    <div class="filters">
+      <input placeholder="🔍 Search projects…">
+      <div class="chip on">All</div><div class="chip">Completed</div><div class="chip">Processing</div><div class="chip">Failed</div><div class="chip">Idle</div>
+      <div class="chip">Sort: Newest ▾</div>
+    </div>
+    <div class="grid">
+      <div class="pcard"><div class="thumb"><span class="pill done">● Completed</span><span class="dur">04:32</span></div>
+        <div class="body"><h3 class="serif">Product Launch Keynote</h3><div class="meta">1080p · 30fps · mp4 · 2 days ago · 8 scenes</div>
+        <div class="acts"><button class="mini p">View Captions</button><button class="mini">⧉</button><button class="mini">🗑</button></div></div></div>
+      <div class="pcard"><div class="thumb"><span class="pill proc">● Processing</span><span class="dur">12:08</span></div>
+        <div class="body"><h3 class="serif">Travel Vlog — Bali</h3><div class="meta">4K · 60fps · mov · 5 min ago</div>
+        <div class="bar"><i></i></div>
+        <div class="acts"><button class="mini p">View Progress 62%</button><button class="mini">🗑</button></div></div></div>
+      <div class="pcard"><div class="thumb"><span class="pill idle">● Idle</span><span class="dur">01:47</span></div>
+        <div class="body"><h3 class="serif">Cooking Tutorial Ep. 3</h3><div class="meta">720p · 24fps · webm · 1 hour ago</div>
+        <div class="acts"><button class="mini p">▶ Start Processing</button><button class="mini">⧉</button><button class="mini">🗑</button></div></div></div>
+      <div class="pcard"><div class="thumb"><span class="pill done">● Completed</span><span class="dur">08:15</span></div>
+        <div class="body"><h3 class="serif">Conference Panel Talk</h3><div class="meta">1080p · 25fps · mp4 · 4 days ago · 14 scenes</div>
+        <div class="acts"><button class="mini p">View Captions</button><button class="mini">⧉</button><button class="mini">🗑</button></div></div></div>
+      <div class="pcard"><div class="thumb"><span class="pill fail">● Failed</span><span class="dur">22:51</span></div>
+        <div class="body"><h3 class="serif">Long Webinar Recording</h3><div class="meta">1080p · 30fps · mp4 · 1 week ago</div>
+        <div class="acts"><button class="mini p">↻ Retry</button><button class="mini">🗑</button></div></div></div>
+      <div class="pcard"><div class="thumb"><span class="pill done">● Completed</span><span class="dur">00:58</span></div>
+        <div class="body"><h3 class="serif">Ad Spot — Spring Sale</h3><div class="meta">1080p · 30fps · mp4 · 2 weeks ago · 3 scenes</div>
+        <div class="acts"><button class="mini p">View Captions</button><button class="mini">⧉</button><button class="mini">🗑</button></div></div></div>
+    </div>
+    <div class="pgn"><div class="pg">←</div><div class="pg on">1</div><div class="pg">2</div><div class="pg">3</div><div class="pg">→</div></div>
+  </div>
+</div>
+</body></html>

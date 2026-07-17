@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8"><style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--green:#17603a;--green-d:#0e4f2b;--pink:#f2547d;--blush:#fdecee;--ink:#0f1211}
+body{font-family:'Segoe UI',Arial,sans-serif;background:#f7f2f3}
+.serif{font-family:Georgia,serif}
+.shell{display:flex;min-height:100vh}
+.sb{width:250px;background:var(--ink);color:#fff;padding:26px 0;flex-shrink:0}
+.sb .logo{background:var(--pink);margin:0 22px 8px;padding:12px;border-radius:8px;text-align:center;font-family:Georgia,serif;font-style:italic;font-weight:700;font-size:17px}
+.sb .adm{text-align:center;font-size:10px;letter-spacing:3px;color:#f2547d;font-weight:700;margin-bottom:26px}
+.sb a{display:flex;gap:12px;padding:13px 28px;color:#9fb3a8;text-decoration:none;font-size:14px}
+.sb a.on{background:rgba(242,84,125,.15);color:#fff;border-left:4px solid var(--pink)}
+.main{flex:1;padding:30px 38px}
+.kicker{color:var(--pink);letter-spacing:3px;font-size:11px;font-weight:700}
+h1{font-family:Georgia,serif;font-weight:500;font-size:26px;margin:4px 0 22px}
+.cols{display:flex;gap:22px}
+/* left: request detail */
+.box{background:#fff;box-shadow:0 8px 22px rgba(0,0,0,.05)}
+.lc{width:400px;flex-shrink:0}
+.dhd{background:var(--green-d);color:#fff;padding:20px 24px}
+.dhd b{font-family:Georgia,serif;font-size:18px}
+.dhd span{display:block;font-size:12px;opacity:.8;margin-top:4px}
+.sec{padding:18px 24px;border-bottom:1px solid #f5f0f1}
+.sec h4{font-size:11px;letter-spacing:2px;color:#f2547d;margin-bottom:12px}
+.kv{display:flex;justify-content:space-between;font-size:13px;padding:6px 0;color:#555}
+.kv b{color:#1a1a1a}
+.thumb{height:140px;background:linear-gradient(135deg,#1c6b40,#39a56b);border-radius:6px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:30px;margin-bottom:6px;position:relative}
+.thumb .dur{position:absolute;right:10px;bottom:8px;background:rgba(0,0,0,.6);font-size:11px;padding:3px 8px;border-radius:4px}
+.pill{font-size:11px;font-weight:700;padding:4px 12px;border-radius:14px;background:#e6f7ec;color:#17603a}
+.timeline{padding:4px 0}
+.tr{display:flex;gap:12px;font-size:12.5px;padding:7px 0;color:#555;align-items:baseline}
+.tr .t{color:#bbb;width:56px;font-size:11px;flex-shrink:0}
+.tr .ok{color:#17603a;font-weight:700}
+/* right: results */
+.rc{flex:1}
+.rhd{padding:18px 24px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #f5f0f1}
+.rhd b{font-family:Georgia,serif;font-size:17px}
+.tabs{display:flex;gap:4px}
+.tab{padding:8px 16px;font-size:12.5px;font-weight:600;color:#777;border-radius:20px}
+.tab.on{background:var(--pink);color:#fff}
+.scene{border-bottom:1px solid #f5f0f1;padding:18px 24px}
+.shd{display:flex;gap:14px;align-items:center;margin-bottom:12px}
+.stn{width:80px;height:52px;border-radius:5px;background:linear-gradient(135deg,#1c6b40,#39a56b);flex-shrink:0;display:flex;align-items:center;justify-content:center;color:#fff}
+.shd b{font-family:Georgia,serif;font-size:15px}
+.shd span{display:block;font-size:11.5px;color:#999;margin-top:2px}
+.tags{margin-left:auto;display:flex;gap:6px}
+.tag{background:var(--blush);color:#c25;font-size:10.5px;font-weight:700;padding:4px 11px;border-radius:14px}
+.cap{background:#fbf6f7;border-left:3px solid var(--pink);padding:12px 16px;border-radius:5px;font-size:13.5px;color:#444;font-family:Georgia,serif;line-height:1.6;margin-bottom:8px}
+.cap .lb{font-family:'Segoe UI',Arial;font-size:10px;letter-spacing:2px;color:#f2547d;font-weight:700;display:block;margin-bottom:5px}
+.cap.g{border-color:#17603a}.cap.g .lb{color:#17603a}
+</style></head><body>
+<div class="shell">
+  <div class="sb">
+    <div class="logo">🎬 CaptionDB</div>
+    <div class="adm">ADMIN CONSOLE</div>
+    <a href="#">▦ Overview</a><a class="on" href="#">🗂 All Requests</a><a href="#">✍ Generated Results</a><a href="#">♥ System Health</a><a href="#">↩ Exit to App</a>
+  </div>
+  <div class="main">
+    <div class="kicker">ADMIN · REQUEST INSPECTOR</div>
+    <h1 class="serif">Request #a3f2 — Product Launch Keynote</h1>
+    <div class="cols">
+      <div class="box lc">
+        <div class="dhd"><b class="serif">Data Provided</b><span>What the user submitted</span></div>
+        <div class="sec">
+          <div class="thumb">▶<span class="dur">04:32</span></div>
+        </div>
+        <div class="sec"><h4>UPLOADED FILE</h4>
+          <div class="kv"><span>Filename</span><b>keynote_final.mp4</b></div>
+          <div class="kv"><span>Size</span><b>210.4 MB</b></div>
+          <div class="kv"><span>Format / Codec</span><b>mp4 · H.264</b></div>
+          <div class="kv"><span>Resolution</span><b>1920 × 1080 · 30 fps</b></div>
+          <div class="kv"><span>Duration</span><b>4 min 32 s</b></div>
+        </div>
+        <div class="sec"><h4>REQUEST INFO</h4>
+          <div class="kv"><span>Project name</span><b>Product Launch Keynote</b></div>
+          <div class="kv"><span>Received</span><b>Jul 14, 2026 · 14:02</b></div>
+          <div class="kv"><span>Status</span><span class="pill">● Completed</span></div>
+          <div class="kv"><span>Processing time</span><b>2m 41s</b></div>
+        </div>
+        <div class="sec"><h4>PIPELINE TIMELINE</h4>
+          <div class="timeline">
+            <div class="tr"><span class="t">14:02:04</span><span class="ok">✓</span>Upload complete · metadata extracted</div>
+            <div class="tr"><span class="t">14:02:19</span><span class="ok">✓</span>8 scenes detected</div>
+            <div class="tr"><span class="t">14:02:31</span><span class="ok">✓</span>24 keyframes selected</div>
+            <div class="tr"><span class="t">14:04:12</span><span class="ok">✓</span>Vision analysis — 8/8 scenes</div>
+            <div class="tr"><span class="t">14:04:45</span><span class="ok">✓</span>40 captions written · 5 tones</div>
+          </div>
+        </div>
+      </div>
+      <div class="box rc">
+        <div class="rhd"><b class="serif">Results Generated — 40 captions</b>
+          <div class="tabs"><span class="tab on">All Tones</span><span class="tab">Formal</span><span class="tab">Sarcastic</span><span class="tab">Audio</span></div>
+        </div>
+        <div class="scene">
+          <div class="shd"><div class="stn">▶</div><div><b class="serif">Scene 1 — Opening</b><span>0:00 – 0:31</span></div>
+            <div class="tags"><span class="tag">stage</span><span class="tag">lights</span><span class="tag">crowd</span></div></div>
+          <div class="cap g"><span class="lb">FORMAL</span>"The event opens with dramatic stage lighting as attendees take their seats."</div>
+          <div class="cap"><span class="lb">SARCASTIC</span>"Lights. Fog machine. Someone's about to say 'innovation' seventeen times."</div>
+        </div>
+        <div class="scene">
+          <div class="shd"><div class="stn">▶</div><div><b class="serif">Scene 2 — Intro</b><span>0:31 – 1:05</span></div>
+            <div class="tags"><span class="tag">speaker</span><span class="tag">applause</span></div></div>
+          <div class="cap g"><span class="lb">FORMAL</span>"The keynote speaker walks on stage and greets the audience warmly."</div>
+          <div class="cap"><span class="lb">AUDIO</span>"[Applause swells] Footsteps on stage. Upbeat intro music fades out."</div>
+        </div>
+        <div class="scene">
+          <div class="shd"><div class="stn">▶</div><div><b class="serif">Scene 3 — Product Demo</b><span>1:05 – 1:44</span></div>
+            <div class="tags"><span class="tag">product</span><span class="tag">screen</span><span class="tag">demo</span></div></div>
+          <div class="cap g"><span class="lb">FORMAL</span>"The presenter demonstrates the new device on the main display while the audience observes."</div>
+          <div class="cap"><span class="lb">HUMOROUS TECH</span>"POV: the live demo works first try and the engineers backstage can finally exhale."</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</body></html>

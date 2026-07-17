@@ -1,0 +1,107 @@
+@import "tailwindcss";
+
+:root {
+  --green: #17603a;
+  --green-d: #0e4f2b;
+  --green-l: #2b8a55;
+  --pink: #f2547d;
+  --pink-d: #e63d68;
+  --blush: #fdecee;
+  --ink: #0f1211;
+}
+
+@theme inline {
+  --color-green: var(--green);
+  --color-green-d: var(--green-d);
+  --color-green-l: var(--green-l);
+  --color-pink: var(--pink);
+  --color-pink-d: var(--pink-d);
+  --color-blush: var(--blush);
+  --color-ink: var(--ink);
+}
+
+body {
+  background: var(--blush);
+  color: #222;
+  font-family: "Segoe UI", Arial, Helvetica, sans-serif;
+}
+
+.font-serif {
+  font-family: Georgia, "Times New Roman", serif;
+}
+
+/* ── Animations ─────────────────────────────────────────── */
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(28px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes blink {
+  0%, 100% { border-color: var(--pink); }
+  50% { border-color: transparent; }
+}
+
+@keyframes pulseRing {
+  0% { transform: scale(1); opacity: 0.7; }
+  100% { transform: scale(1.12); opacity: 0; }
+}
+
+@keyframes spinSlow {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes floaty {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+.anim-fade-up { animation: fadeUp 0.7s ease both; }
+.anim-fade-in { animation: fadeIn 0.9s ease both; }
+.anim-float { animation: floaty 5s ease-in-out infinite; }
+.anim-spin-slow { animation: spinSlow 14s linear infinite; }
+
+.delay-1 { animation-delay: 0.12s; }
+.delay-2 { animation-delay: 0.24s; }
+.delay-3 { animation-delay: 0.36s; }
+.delay-4 { animation-delay: 0.48s; }
+
+.typewriter-caret {
+  border-right: 3px solid var(--pink);
+  padding-right: 4px;
+  animation: blink 0.85s step-end infinite;
+}
+
+.pulse-ring::after {
+  content: "";
+  position: absolute;
+  inset: -12px;
+  border-radius: 9999px;
+  border: 2px dashed rgba(242, 84, 125, 0.4);
+  animation: pulseRing 1.6s ease-out infinite;
+}
+
+/* Scroll reveal (used with IntersectionObserver) */
+.reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Card hover lift */
+.lift {
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+.lift:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 22px 44px rgba(203, 86, 120, 0.22);
+}

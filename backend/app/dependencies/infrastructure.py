@@ -115,7 +115,7 @@ def get_db_session() -> Generator[Any, None, None]:
 def get_metadata_extractor(settings: Settings = Depends(get_settings)) -> "FFprobeMetadataExtractor":
     """Provides the concrete FFprobe extractor."""
     from app.infrastructure.metadata.ffprobe import FFprobeMetadataExtractor
-    return FFprobeMetadataExtractor(timeout_seconds=settings.METADATA_TIMEOUT_SECONDS)
+    return FFprobeMetadataExtractor(timeout_seconds=15)
 
 
 def get_scene_detector() -> "PySceneDetectDetector":

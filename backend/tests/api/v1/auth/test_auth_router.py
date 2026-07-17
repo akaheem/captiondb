@@ -107,7 +107,7 @@ class TestRegister:
             success=False, error=ApiError(code="CONFLICT", message="Email already in use.")
         )
         resp = c.post("/api/v1/auth/register", json={
-            "email": "dupe@example.com", "username": "u", "password": "Str0ng!Pass"
+            "email": "dupe@example.com", "username": "dupeuser", "password": "Str0ng!Pass"
         })
         assert resp.status_code == 409
 

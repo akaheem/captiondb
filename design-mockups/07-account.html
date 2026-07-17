@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8"><style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--green:#17603a;--green-d:#0e4f2b;--pink:#f2547d;--blush:#fdecee}
+body{font-family:'Segoe UI',Arial,sans-serif;background:var(--blush)}
+.serif{font-family:Georgia,serif}
+.shell{display:flex;min-height:100vh}
+.sb{width:250px;background:var(--green-d);color:#fff;padding:26px 0;flex-shrink:0}
+.sb .logo{background:var(--pink);margin:0 22px 34px;padding:12px;border-radius:8px;text-align:center;font-family:Georgia,serif;font-style:italic;font-weight:700;font-size:17px}
+.sb a{display:flex;gap:12px;padding:13px 28px;color:#cfe6d7;text-decoration:none;font-size:14px}
+.sb a.on{background:rgba(242,84,125,.18);color:#fff;border-left:4px solid var(--pink)}
+.main{flex:1;padding:34px 46px}
+.kicker{color:var(--pink);letter-spacing:3px;font-size:11px;font-weight:700}
+h1{font-family:Georgia,serif;font-weight:500;font-size:30px;margin:4px 0 28px}
+.cols{display:flex;gap:26px;align-items:flex-start}
+.box{background:#fff;box-shadow:0 12px 30px rgba(203,86,120,.1)}
+/* profile card */
+.pcard{width:320px;text-align:center;padding-bottom:26px}
+.pcard .band{height:90px;background:linear-gradient(135deg,var(--green-d),#2b8a55)}
+.av{width:92px;height:92px;border-radius:50%;background:var(--pink);color:#fff;font-size:36px;font-weight:700;display:flex;align-items:center;justify-content:center;margin:-46px auto 14px;border:5px solid #fff;box-shadow:0 10px 24px rgba(242,84,125,.35)}
+.pcard h2{font-family:Georgia,serif;font-size:22px}
+.pcard .mail{color:#999;font-size:13px;margin:6px 0 14px}
+.badges{display:flex;gap:8px;justify-content:center}
+.bdg{font-size:11.5px;font-weight:700;padding:5px 14px;border-radius:20px}
+.bdg.g{background:#e6f7ec;color:#17603a}.bdg.p{background:var(--blush);color:#c25}
+.pstats{display:flex;margin-top:22px;border-top:1px solid #faeef1;padding-top:18px}
+.pstats div{flex:1}
+.pstats b{display:block;font-family:Georgia,serif;font-size:20px}
+.pstats span{font-size:11px;color:#999}
+/* right side */
+.rc{flex:1;display:flex;flex-direction:column;gap:22px}
+.box .hd{padding:20px 26px;border-bottom:1px solid #faeef1;display:flex;justify-content:space-between;align-items:center}
+.box .hd b{font-family:Georgia,serif;font-size:17px}
+.btn{background:var(--pink);color:#fff;border:none;padding:10px 20px;border-radius:6px;font-weight:700;font-size:13px}
+.bd{padding:20px 26px}
+label{display:block;font-size:12.5px;font-weight:600;color:#444;margin:14px 0 6px}
+input{width:100%;padding:12px 14px;border:1.5px solid #eadfe2;border-radius:6px;font-size:14px;background:#fdf8f9}
+.two{display:flex;gap:16px}.two>div{flex:1}
+/* identities */
+.idrow{display:flex;align-items:center;gap:14px;padding:14px 0;border-bottom:1px solid #faeef1}
+.idrow:last-child{border:none}
+.idic{width:42px;height:42px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px;background:var(--blush)}
+.idrow b{font-size:14px}.idrow span{display:block;font-size:12px;color:#999;margin-top:2px}
+.idrow .grow{flex:1}
+.link{background:#fff;border:1.5px solid #f0dde2;color:#555;padding:8px 18px;border-radius:6px;font-size:12.5px;font-weight:600}
+.link.un{color:#c22f4f;border-color:#f6ccd5}
+/* sessions */
+.sess .idic{background:#e6f7ec}
+.now{font-size:11px;font-weight:700;color:#17603a;background:#e6f7ec;padding:4px 12px;border-radius:20px}
+.danger{color:#c22f4f;border-color:#f6ccd5}
+</style></head><body>
+<div class="shell">
+  <div class="sb">
+    <div class="logo">🎬 CaptionDB</div>
+    <a href="#">▦ Dashboard</a><a href="#">⬆ Upload Video</a><a href="#">🎬 Projects</a><a class="on" href="#">👤 Profile</a><a href="#">🖥 Sessions</a>
+  </div>
+  <div class="main">
+    <div class="kicker">ACCOUNT</div>
+    <h1 class="serif">Profile &amp; Security</h1>
+    <div class="cols">
+      <div class="box pcard">
+        <div class="band"></div>
+        <div class="av">M</div>
+        <h2 class="serif">mibra</h2>
+        <div class="mail">mibra@example.com</div>
+        <div class="badges"><span class="bdg g">✓ Verified</span><span class="bdg p">User</span><span class="bdg g">● Active</span></div>
+        <div class="pstats"><div><b>12</b><span>PROJECTS</span></div><div><b>420</b><span>CAPTIONS</span></div><div><b>3</b><span>IDENTITIES</span></div></div>
+      </div>
+      <div class="rc">
+        <div class="box">
+          <div class="hd"><b class="serif">Profile Details</b><button class="btn">Save Changes</button></div>
+          <div class="bd" style="padding-top:6px">
+            <div class="two">
+              <div><label>Display Name</label><input value="Mibra"></div>
+              <div><label>Username</label><input value="mibra"></div>
+            </div>
+            <label>Email Address</label><input value="mibra@example.com">
+          </div>
+        </div>
+        <div class="box">
+          <div class="hd"><b class="serif">Linked Identities</b></div>
+          <div class="bd" style="padding-top:8px">
+            <div class="idrow"><div class="idic">📧</div><div class="grow"><b>Email &amp; Password</b><span>Primary sign-in · linked Jan 2026</span></div><button class="link">Change Password</button></div>
+            <div class="idrow"><div class="idic">🟢</div><div class="grow"><b>Google</b><span>mibra@gmail.com · linked Mar 2026</span></div><button class="link un">Unlink</button></div>
+            <div class="idrow"><div class="idic">⚫</div><div class="grow"><b>GitHub</b><span>Not connected</span></div><button class="link">＋ Link Account</button></div>
+          </div>
+        </div>
+        <div class="box sess">
+          <div class="hd"><b class="serif">Active Sessions</b><button class="link danger">Log Out Everywhere</button></div>
+          <div class="bd" style="padding-top:8px">
+            <div class="idrow"><div class="idic">💻</div><div class="grow"><b>Windows · Chrome</b><span>103.156.xx.xx · last seen just now</span></div><span class="now">This device</span></div>
+            <div class="idrow"><div class="idic">📱</div><div class="grow"><b>Android · App</b><span>103.156.xx.xx · last seen 2 hours ago</span></div><button class="link un">Revoke</button></div>
+            <div class="idrow"><div class="idic">💻</div><div class="grow"><b>Mac · Safari</b><span>172.68.xx.xx · last seen 3 days ago</span></div><button class="link un">Revoke</button></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</body></html>

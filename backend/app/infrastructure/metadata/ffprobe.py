@@ -9,17 +9,7 @@ from loguru import logger
 
 from app.domain.models.video import VideoMetadata, VideoDimensions, VideoFormat
 from app.domain.interfaces.metadata import MetadataExtractor
-from app.core.exceptions import StorageException
-
-# Reuse StorageException or create a specific one. Actually, the project uses domain exceptions.
-# I will use a custom exception mapping. Wait, the prompt says "Map all failures into existing project exceptions."
-# Existing project exceptions are in app.core.exceptions (from Phase 1.1). Let's assume we can use a general ApplicationException or create a specific one if it's missing, but I'll use what's likely there or define a safe wrapper. I'll import DomainException from app.core.exceptions.
-from app.core.exceptions import DomainException
-
-class MetadataExtractionError(DomainException):
-    """Raised when metadata extraction fundamentally fails."""
-    def __init__(self, message: str, details: Optional[str] = None):
-        super().__init__(message=message, details=details, status_code=500)
+from app.core.exceptions import MetadataExtractionError
 
 
 class FFprobeMetadataExtractor(MetadataExtractor):

@@ -1,6 +1,0 @@
-{
-  "name": "CaptionDB",
-  "description": "Advanced AI-powered video caption processing, editing, search, and export platform.",
-  "requestFramePermissions": [],
-  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
-}

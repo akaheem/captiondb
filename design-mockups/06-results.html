@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8"><style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--green:#17603a;--green-d:#0e4f2b;--pink:#f2547d;--blush:#fdecee}
+body{font-family:'Segoe UI',Arial,sans-serif;background:var(--blush)}
+.serif{font-family:Georgia,serif}
+.shell{display:flex;min-height:100vh}
+.sb{width:250px;background:var(--green-d);color:#fff;padding:26px 0;flex-shrink:0}
+.sb .logo{background:var(--pink);margin:0 22px 34px;padding:12px;border-radius:8px;text-align:center;font-family:Georgia,serif;font-style:italic;font-weight:700;font-size:17px}
+.sb a{display:flex;gap:12px;padding:13px 28px;color:#cfe6d7;text-decoration:none;font-size:14px}
+.sb a.on{background:rgba(242,84,125,.18);color:#fff;border-left:4px solid var(--pink)}
+.main{flex:1;padding:30px 40px}
+.kicker{color:var(--pink);letter-spacing:3px;font-size:11px;font-weight:700}
+.head{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:22px}
+h1{font-family:Georgia,serif;font-weight:500;font-size:28px;margin-top:4px}
+.pill{background:#e6f7ec;color:#17603a;font-size:12px;font-weight:700;padding:6px 16px;border-radius:20px;margin-left:12px;vertical-align:middle}
+.btn{background:var(--pink);color:#fff;border:none;padding:12px 22px;border-radius:6px;font-weight:700;font-size:13.5px;box-shadow:0 8px 18px rgba(242,84,125,.3)}
+.ghost{background:#fff;color:#555;border:1.5px solid #f0dde2;box-shadow:none}
+/* summary strip */
+.sumrow{display:flex;gap:16px;margin-bottom:24px}
+.sum{flex:1;background:#fff;padding:16px 20px;position:relative;box-shadow:0 10px 24px rgba(203,86,120,.08)}
+.sum .ic{position:absolute;top:-13px;left:-9px;width:38px;height:38px;background:var(--pink);color:#fff;display:flex;align-items:center;justify-content:center;font-size:15px}
+.sum:nth-child(even) .ic{background:var(--green)}
+.sum b{display:block;font-size:22px;font-family:Georgia,serif;margin-top:8px}
+.sum span{font-size:11.5px;color:#999}
+/* timeline */
+.tl{background:#fff;padding:18px 22px;box-shadow:0 10px 24px rgba(203,86,120,.08);margin-bottom:24px}
+.tl h3{font-family:Georgia,serif;font-size:15px;margin-bottom:12px}
+.track{display:flex;height:52px;border-radius:6px;overflow:hidden;gap:3px}
+.seg{flex:1;background:linear-gradient(135deg,#1c6b40,#39a56b);position:relative;opacity:.85}
+.seg:nth-child(3n){background:linear-gradient(135deg,#0e4f2b,#17603a)}
+.seg.on{outline:3px solid var(--pink);outline-offset:-3px;opacity:1}
+.seg span{position:absolute;bottom:4px;left:6px;color:#fff;font-size:10px}
+/* scene layout */
+.cols{display:flex;gap:22px}
+.scenes{width:290px;flex-shrink:0}
+.scard{background:#fff;padding:14px 16px;margin-bottom:12px;display:flex;gap:12px;box-shadow:0 8px 20px rgba(203,86,120,.07);cursor:pointer}
+.scard.on{border-left:4px solid var(--pink)}
+.scard .tn{width:76px;height:50px;border-radius:5px;background:linear-gradient(135deg,#1c6b40,#39a56b);flex-shrink:0;display:flex;align-items:center;justify-content:center;color:#fff;font-size:13px}
+.scard.on .tn{background:linear-gradient(135deg,#f2547d,#f98fab)}
+.scard b{font-size:13px;font-family:Georgia,serif}
+.scard span{display:block;font-size:11px;color:#999;margin-top:3px}
+/* detail */
+.detail{flex:1;background:#fff;box-shadow:0 12px 30px rgba(203,86,120,.1)}
+.dhd{background:var(--green-d);color:#fff;padding:20px 26px}
+.dhd b{font-family:Georgia,serif;font-size:19px}
+.dhd span{display:block;font-size:12.5px;opacity:.8;margin-top:4px}
+.dbody{padding:24px 26px}
+.tags{display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap}
+.tag{background:var(--blush);color:#c25;font-size:11.5px;font-weight:700;padding:5px 13px;border-radius:20px}
+.tag.g{background:#e6f7ec;color:#17603a}
+/* tone tabs */
+.tabs{display:flex;gap:6px;border-bottom:2px solid #f7e8ec;margin-bottom:18px}
+.tab{padding:11px 18px;font-size:13px;font-weight:600;color:#888;border-bottom:3px solid transparent;margin-bottom:-2px}
+.tab.on{color:var(--pink);border-color:var(--pink)}
+.cap{background:var(--blush);border-left:4px solid var(--pink);padding:18px 20px;border-radius:6px;font-size:15px;line-height:1.7;color:#333;font-family:Georgia,serif}
+.caphd{display:flex;justify-content:space-between;margin-bottom:10px;align-items:center}
+.caphd .lbl{color:var(--pink);letter-spacing:2px;font-size:11px;font-weight:700}
+.copy{background:#fff;border:1.5px solid #f0dde2;border-radius:5px;padding:7px 14px;font-size:12px;color:#555;font-weight:600}
+.sum2{margin-top:20px;font-size:13.5px;color:#666;line-height:1.75}
+.sum2 b{font-family:Georgia,serif;color:#222;font-size:14.5px;display:block;margin-bottom:6px}
+</style></head><body>
+<div class="shell">
+  <div class="sb">
+    <div class="logo">🎬 CaptionDB</div>
+    <a href="#">▦ Dashboard</a><a href="#">⬆ Upload Video</a><a class="on" href="#">🎬 Projects</a><a href="#">👤 Profile</a><a href="#">🖥 Sessions</a>
+  </div>
+  <div class="main">
+    <div class="head">
+      <div><div class="kicker">PROJECT RESULTS</div><h1 class="serif">Product Launch Keynote<span class="pill">● Completed</span></h1></div>
+      <div><button class="btn ghost">⧉ Duplicate</button> <button class="btn">⬇ Export Captions</button></div>
+    </div>
+    <div class="sumrow">
+      <div class="sum"><div class="ic">🎬</div><b>8</b><span>Total Scenes</span></div>
+      <div class="sum"><div class="ic">✓</div><b>8</b><span>Successful</span></div>
+      <div class="sum"><div class="ic">✍</div><b>40</b><span>Captions (5 tones)</span></div>
+      <div class="sum"><div class="ic">⏱</div><b>2m 41s</b><span>Processing Time</span></div>
+    </div>
+    <div class="tl"><h3 class="serif">Scene Timeline — 04:32</h3>
+      <div class="track"><div class="seg"><span>0:00</span></div><div class="seg"><span>0:31</span></div><div class="seg on"><span>1:05</span></div><div class="seg"><span>1:44</span></div><div class="seg"><span>2:18</span></div><div class="seg"><span>2:59</span></div><div class="seg"><span>3:37</span></div><div class="seg"><span>4:02</span></div></div>
+    </div>
+    <div class="cols">
+      <div class="scenes">
+        <div class="scard"><div class="tn">▶</div><div><b>Scene 1 — Opening</b><span>0:00 – 0:31 · stage, lights</span></div></div>
+        <div class="scard"><div class="tn">▶</div><div><b>Scene 2 — Intro</b><span>0:31 – 1:05 · speaker, crowd</span></div></div>
+        <div class="scard on"><div class="tn">▶</div><div><b>Scene 3 — Demo</b><span>1:05 – 1:44 · product, screen</span></div></div>
+        <div class="scard"><div class="tn">▶</div><div><b>Scene 4 — Reaction</b><span>1:44 – 2:18 · audience</span></div></div>
+        <div class="scard"><div class="tn">▶</div><div><b>Scene 5 — Pricing</b><span>2:18 – 2:59 · slides</span></div></div>
+      </div>
+      <div class="detail">
+        <div class="dhd"><b class="serif">Scene 3 — Product Demo</b><span>1:05 – 1:44 · 39 seconds · 3 keyframes analyzed</span></div>
+        <div class="dbody">
+          <div class="tags"><span class="tag g">product</span><span class="tag g">screen</span><span class="tag g">presenter</span><span class="tag">demo</span><span class="tag">technology</span><span class="tag">stage lighting</span></div>
+          <div class="tabs"><div class="tab on">🏛 Formal</div><div class="tab">😏 Sarcastic</div><div class="tab">🤓 Humorous Tech</div><div class="tab">😂 Humorous</div><div class="tab">🔊 Audio</div></div>
+          <div class="caphd"><span class="lbl">FORMAL · SCENE 3</span><button class="copy">⧉ Copy</button></div>
+          <div class="cap serif">"The presenter demonstrates the new device on the main display while the audience observes the live walkthrough of its key features."</div>
+          <div class="sum2"><b class="serif">AI Scene Summary</b>A presenter on a lit stage interacts with a large display showing product UI. Detected activities: presenting, gesturing, live demo. Dominant colors: deep blue, white, warm spotlight.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</body></html>

@@ -64,34 +64,20 @@ class DatabaseSettings(BaseSettings):
     max_overflow: int = 10
     echo: bool = False
 
-    # 👇 Change this default
-    ssl_mode: str = "require"
+    # SSL mode passed to asyncpg: disable | allow | prefer | require | verify-ca | verify-full
+    # "prefer" tries SSL first and falls back to plaintext, so it works both
+    # locally (no SSL) and on managed Postgres (SSL required).
+    ssl_mode: str = "prefer"
 
     @property
     def async_database_url(self) -> str:
+        """Constructs the async SQLAlchemy connection string."""
         return (
             f"postgresql+asyncpg://"
             f"{self.username}:{self.password}"
             f"@{self.host}:{self.port}/{self.database}"
             f"?ssl={self.ssl_mode}"
         )
-    def async_database_url(self) -> str:
-        """Constructs the async SQLAlchemy connection string."""
-        return f"postgresql+asyncpg://{self.username}:{self.password}@{self.host}:{self.port}/{self.database}"
-
-
-    
-    # SSL/TLS future proofing
-    ssl_mode: str = "require"
-    
-    @property
-    def async_database_url(self) -> str:
-        return (
-        f"postgresql+asyncpg://"
-        f"{self.username}:{self.password}"
-        f"@{self.host}:{self.port}/{self.database}"
-        f"?ssl={self.ssl_mode}"
-    )
 
 
 class AIProviderSettings(BaseModel):
@@ -143,6 +129,19 @@ class OAuthProviderConfig(BaseModel):
     private_key_pem: Optional[str] = None
     # Twitter-specific OAuth 2.0 PKCE fields
     pkce_enabled: bool = False
+
+
+class AdminSettings(BaseSettings):
+    """
+    Admin console credentials, loaded from environment.
+    ADMIN__EMAIL — the sole administrator account email.
+    ADMIN__PASSWORD_HASH — PBKDF2 hash: pbkdf2_sha256$<iters>$<salt_hex>$<hash_hex>
+    """
+    model_config = SettingsConfigDict(env_prefix="ADMIN__")
+
+    email: str = ""
+    password_hash: str = ""
+    token_expire_minutes: int = 720  # 12 hours
 
 
 class OAuthSettings(BaseSettings):
@@ -209,6 +208,7 @@ class Settings(BaseSettings):
     features: FeatureFlags = FeatureFlags()
     tasks: BackgroundTaskSettings = Field(default_factory=BackgroundTaskSettings)
     oauth: OAuthSettings = Field(default_factory=OAuthSettings)
+    admin: AdminSettings = Field(default_factory=AdminSettings)
 
     model_config = SettingsConfigDict(
         env_file=".env",

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8"><style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--green:#17603a;--green-d:#0e4f2b;--pink:#f2547d;--blush:#fdecee}
+body{font-family:'Segoe UI',Arial,sans-serif;background:var(--blush)}
+.serif{font-family:Georgia,serif}
+.shell{display:flex;min-height:100vh}
+.sb{width:250px;background:var(--green-d);color:#fff;padding:26px 0;flex-shrink:0}
+.sb .logo{background:var(--pink);margin:0 22px 34px;padding:12px;border-radius:8px;text-align:center;font-family:Georgia,serif;font-style:italic;font-weight:700;font-size:17px}
+.sb a{display:flex;gap:12px;padding:13px 28px;color:#cfe6d7;text-decoration:none;font-size:14px}
+.sb a.on{background:rgba(242,84,125,.18);color:#fff;border-left:4px solid var(--pink)}
+.main{flex:1;padding:34px 46px;text-align:center}
+.kicker{color:var(--pink);letter-spacing:3px;font-size:11px;font-weight:700}
+h1{font-family:Georgia,serif;font-weight:500;font-size:30px;margin:4px 0 8px}
+.sub{color:#888;font-size:14px;margin-bottom:36px}
+/* ring */
+.ringwrap{position:relative;width:230px;height:230px;margin:0 auto 34px}
+.ring{width:230px;height:230px;border-radius:50%;background:conic-gradient(var(--pink) 0 62%, #f4dde3 62% 100%);display:flex;align-items:center;justify-content:center}
+.ring .in{width:180px;height:180px;border-radius:50%;background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:inset 0 0 0 1px #fbe9ed}
+.ring b{font-size:44px;font-family:Georgia,serif;color:var(--green-d)}
+.ring span{font-size:12px;color:#999;letter-spacing:1px}
+.pulse{position:absolute;inset:-14px;border-radius:50%;border:2px dashed rgba(242,84,125,.35)}
+/* stages */
+.stages{display:flex;justify-content:center;gap:0;max-width:900px;margin:0 auto 40px}
+.stage{flex:1;position:relative;padding-top:8px}
+.stage::before{content:"";position:absolute;top:29px;left:-50%;width:100%;height:3px;background:#f0d7dd}
+.stage:first-child::before{display:none}
+.stage.done::before,.stage.now::before{background:var(--pink)}
+.dot{width:44px;height:44px;border-radius:50%;margin:0 auto;background:#fff;border:3px solid #f0d7dd;display:flex;align-items:center;justify-content:center;font-size:17px;position:relative;z-index:2}
+.stage.done .dot{background:var(--green);border-color:var(--green);color:#fff}
+.stage.now .dot{background:var(--pink);border-color:var(--pink);color:#fff;box-shadow:0 0 0 8px rgba(242,84,125,.18)}
+.stage p{font-size:12.5px;margin-top:12px;color:#666;font-weight:600}
+.stage.now p{color:var(--pink)}
+.stage small{display:block;color:#b5b5b5;font-size:11px;margin-top:3px}
+/* log card */
+.log{max-width:760px;margin:0 auto;background:#fff;text-align:left;box-shadow:0 14px 34px rgba(203,86,120,.12)}
+.log .hd{background:var(--green-d);color:#fff;padding:16px 24px;display:flex;justify-content:space-between;font-size:14px}
+.log .hd b{font-family:Georgia,serif;font-size:16px}
+.badge{background:#fff3cd;color:#8a6d00;font-size:11.5px;font-weight:700;padding:5px 14px;border-radius:20px}
+.rows{padding:10px 24px 20px}
+.r{display:flex;gap:14px;padding:11px 0;border-bottom:1px solid #faf0f2;font-size:13.5px;color:#555;align-items:center}
+.r:last-child{border:none}
+.r .t{color:#bbb;font-size:12px;width:64px}
+.r .ok{color:var(--green);font-weight:700}
+.r .sp{color:var(--pink);font-weight:700}
+.acts{max-width:760px;margin:22px auto 0;display:flex;gap:14px;justify-content:center}
+.btn{background:var(--pink);color:#fff;border:none;padding:13px 26px;border-radius:6px;font-weight:700;font-size:14px}
+.ghost{background:#fff;color:#555;border:1.5px solid #f0dde2}
+</style></head><body>
+<div class="shell">
+  <div class="sb">
+    <div class="logo">🎬 CaptionDB</div>
+    <a href="#">▦ Dashboard</a><a href="#">⬆ Upload Video</a><a class="on" href="#">🎬 Projects</a><a href="#">👤 Profile</a><a href="#">🖥 Sessions</a>
+  </div>
+  <div class="main">
+    <div class="kicker">PROCESSING</div>
+    <h1 class="serif">Travel Vlog — Bali</h1>
+    <div class="sub">The AI pipeline is working through your video, scene by scene.</div>
+    <div class="ringwrap"><div class="pulse"></div><div class="ring"><div class="in"><b>62%</b><span>ANALYZING SCENES</span></div></div></div>
+    <div class="stages">
+      <div class="stage done"><div class="dot">✓</div><p>Metadata</p><small>ffprobe · 2s</small></div>
+      <div class="stage done"><div class="dot">✓</div><p>Scene Detection</p><small>11 scenes · 14s</small></div>
+      <div class="stage done"><div class="dot">✓</div><p>Keyframes</p><small>33 frames · 9s</small></div>
+      <div class="stage now"><div class="dot">👁</div><p>Vision Analysis</p><small>scene 7 of 11…</small></div>
+      <div class="stage"><div class="dot">✍</div><p>Caption Writing</p><small>5 tones / scene</small></div>
+    </div>
+    <div class="log">
+      <div class="hd"><b class="serif">Live Pipeline Log</b><span class="badge">● Processing</span></div>
+      <div class="rows">
+        <div class="r"><span class="t">14:02:11</span><span class="ok">✓</span> Metadata extracted — 12:08 · 4K · 59.94fps · H.264</div>
+        <div class="r"><span class="t">14:02:25</span><span class="ok">✓</span> Detected 11 scenes across 728 seconds</div>
+        <div class="r"><span class="t">14:02:34</span><span class="ok">✓</span> Selected 33 keyframes (3 per scene)</div>
+        <div class="r"><span class="t">14:03:02</span><span class="ok">✓</span> Scene 6 analyzed — beach, surfing, sunset · 4 objects</div>
+        <div class="r"><span class="t">14:03:18</span><span class="sp">⟳</span> Scene 7 analyzing — street market, vendors, motion…</div>
+      </div>
+    </div>
+    <div class="acts"><button class="btn ghost">← Back to Dashboard</button><button class="btn">View Partial Results ➜</button></div>
+  </div>
+</div>
+</body></html>
