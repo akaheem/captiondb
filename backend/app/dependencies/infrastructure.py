@@ -156,20 +156,26 @@ def get_keyframe_selector(
 def get_image_preprocessor() -> "ImagePreprocessor":
     """
     Provides the image preprocessor.
-    Currently a stub as OpenCVImagePreprocessor is deferred to a future phase.
+    Instantiates the OpenCVImagePreprocessor with Vision-AI-friendly defaults.
     """
-    raise NotImplementedError("OpenCVImagePreprocessor is not yet implemented.")
+    from app.infrastructure.image.opencv_preprocessor import OpenCVImagePreprocessor
+    return OpenCVImagePreprocessor()
 
 
 # ---------------------------------------------------------------------------
 # Vision Analysis Subsystem
 # ---------------------------------------------------------------------------
-def get_vision_analyzer() -> "VisionAnalyzer":
+def get_vision_analyzer(settings: Settings = Depends(get_settings)) -> "VisionAnalyzer":
     """
     Provides the VisionAnalyzer implementation.
-    Currently a stub as FireworksVisionAdapter is deferred to a future phase.
+    Instantiates the FireworksVisionAdapter using AIProviderSettings.
     """
-    raise NotImplementedError("FireworksVisionAdapter is not yet implemented.")
+    from app.infrastructure.vision.fireworks_adapter import FireworksVisionAdapter
+
+    if settings.ai.provider == "fireworks":
+        return FireworksVisionAdapter(settings=settings.ai)
+
+    raise NotImplementedError(f"Vision analyzer for provider '{settings.ai.provider}' is not implemented.")
 
 
 # ---------------------------------------------------------------------------
