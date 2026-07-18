@@ -75,8 +75,22 @@ export default function ProcessingPage() {
               pushLog(res.message, true);
             })
             .catch((e) => {
-              setStatus("Failed");
-              setErrorMsg(e instanceof Error ? e.message : "Processing failed.");
+              // A 4xx from the API is a real rejection. Anything else
+              // (network drop, gateway timeout) usually means the backend
+              // is still working — keep polling instead of failing hard.
+              const apiStatus =
+                e && typeof e === "object" && "status" in e
+                  ? (e as { status: number }).status
+                  : 0;
+              if (apiStatus >= 400 && apiStatus < 500) {
+                setStatus("Failed");
+                setErrorMsg(e instanceof Error ? e.message : "Processing failed.");
+              } else {
+                pushLog(
+                  "Connection to the server was interrupted — processing continues in the background, watching status…",
+                  false
+                );
+              }
             });
         }
       } catch (e) {
