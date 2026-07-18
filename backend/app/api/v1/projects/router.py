@@ -7,6 +7,7 @@ from app.dependencies.services import get_project_service, get_ai_pipeline_servi
 from app.services.project import ProjectService
 from app.services.ai_pipeline import AIPipelineService
 from app.domain.models.analysis import ProcessingContext
+from app.domain.models.pipeline import PipelineStatus
 from app.domain.models.video import VideoStatus
 from app.core.exceptions import NotFoundException
 from app.domain.models.video import Video
@@ -128,20 +129,27 @@ async def process_project(
 ) -> ProcessingStartResponse:
     try:
         video = await project_service.get_project_by_id(project_id)
-        
+
         if video.state.status in [VideoStatus.PROCESSING, VideoStatus.COMPLETED]:
             raise HTTPException(
                 status_code=status.HTTP_409_CONFLICT,
                 detail=f"Project is currently {video.state.status.value}"
             )
-            
-        context = ProcessingContext(video=video)
+
+        context = ProcessingContext(video=video, current_stage_name="Initialization")
         result = await pipeline_service.process(context)
-        
+
+        # Map pipeline outcome onto the video lifecycle status
+        final_status = (
+            VideoStatus.COMPLETED
+            if result.status in (PipelineStatus.SUCCESS, PipelineStatus.PARTIAL_SUCCESS)
+            else VideoStatus.FAILED
+        )
         return ProcessingStartResponse(
             project_id=project_id,
-            status=result.status,
-            message="Processing completed synchronously." if result.status == VideoStatus.COMPLETED else "Processing encountered errors."
+            status=final_status,
+            message="Processing completed synchronously." if final_status == VideoStatus.COMPLETED
+            else f"Processing failed: {result.error_message or 'all scenes failed.'}"
         )
     except NotFoundException as e:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e))

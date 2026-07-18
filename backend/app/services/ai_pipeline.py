@@ -20,6 +20,7 @@ from app.services.vision import VisionAnalysisService
 from app.services.caption_generation import CaptionGenerationService
 from app.services.scene_result_integration import SceneResultIntegrationService
 from app.domain.interfaces.unit_of_work import AbstractUnitOfWork
+from app.domain.models.video import VideoStatus
 from app.core.exceptions import VideoAnalysisPipelineException
 
 
@@ -60,11 +61,17 @@ class AIPipelineService:
         result = VideoPipelineResult(video_id=video_id, status=PipelineStatus.FAILED)
         
         # Step 0: Ensure we have the latest Video aggregate from the database
+        # and mark it as actively processing.
         try:
             async with self._uow:
                 db_video = await self._uow.videos.get_by_id(video_id)
                 if not db_video:
                     raise ValueError(f"Video {video_id} not found in database.")
+                db_video.state.status = VideoStatus.PROCESSING
+                db_video.state.started_at = datetime.now(timezone.utc)
+                db_video.state.error_message = None
+                await self._uow.videos.update(db_video)
+                await self._uow.commit()
                 context.video = db_video
         except Exception as e:
             logger.error(f"Failed to load video {video_id} for AI Pipeline: {str(e)}")
@@ -79,21 +86,24 @@ class AIPipelineService:
             logger.exception(f"Video Analysis Pipeline failed critically for {video_id}: {str(e)}")
             result.error_message = f"Video Analysis Pipeline failed: {str(e)}"
             result.completed_at = datetime.now(timezone.utc)
+            await self._persist_video_status(context, VideoStatus.FAILED, result.error_message)
             return result
-            
+
         if not video_analysis_result.is_success:
             logger.error(f"Video Analysis Pipeline failed cleanly for {video_id}: {video_analysis_result.error_message}")
             result.error_message = video_analysis_result.error_message
             result.completed_at = datetime.now(timezone.utc)
+            await self._persist_video_status(context, VideoStatus.FAILED, result.error_message)
             return result
-            
+
         packages = video_analysis_result.packages
         result.statistics.total_scenes = len(packages)
-        
+
         if not packages:
             logger.warning(f"No scenes detected for video {video_id}. Pipeline completing empty.")
             result.status = PipelineStatus.SUCCESS
             result.completed_at = datetime.now(timezone.utc)
+            await self._persist_video_status(context, VideoStatus.COMPLETED, None)
             return result
             
         logger.info(f"Video {video_id} analysis complete. Proceeding to process {len(packages)} scenes.")
@@ -163,14 +173,42 @@ class AIPipelineService:
         # Step 5: Integrate results into the Video aggregate and persist
         try:
             integration_result = self._integration_service.process(context, result)
-            
+
+            enriched = integration_result.enriched_video
+            if result.status in (PipelineStatus.SUCCESS, PipelineStatus.PARTIAL_SUCCESS):
+                enriched.state.status = VideoStatus.COMPLETED
+                enriched.state.error_message = result.error_message
+            else:
+                enriched.state.status = VideoStatus.FAILED
+                enriched.state.error_message = result.error_message or "All scenes failed processing."
+            enriched.state.completed_at = datetime.now(timezone.utc)
+            enriched.state.progress_percent = 100.0
+
             async with self._uow:
-                await self._uow.videos.update(integration_result.enriched_video)
+                await self._uow.videos.update(enriched)
                 await self._uow.commit()
-                
+
             logger.info(f"Successfully persisted AI enrichment for video {video_id}")
         except Exception as e:
             logger.error(f"Failed to integrate and persist AI results for video {video_id}: {str(e)}")
             # We don't overwrite the pipeline result, but we log the failure.
-            
+
         return result
+
+    async def _persist_video_status(
+        self,
+        context: ProcessingContext,
+        status: VideoStatus,
+        error_message: Optional[str]
+    ) -> None:
+        """Persists a terminal lifecycle status so videos never stay stuck in PROCESSING."""
+        try:
+            video = context.video
+            video.state.status = status
+            video.state.error_message = error_message
+            video.state.completed_at = datetime.now(timezone.utc)
+            async with self._uow:
+                await self._uow.videos.update(video)
+                await self._uow.commit()
+        except Exception as e:
+            logger.error(f"Failed to persist status {status.value} for video {context.video.id}: {str(e)}")
