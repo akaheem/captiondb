@@ -84,7 +84,7 @@ class AIProviderSettings(BaseModel):
     """AI Provider configurations (credentials and routing)."""
     provider: Literal["fireworks", "openai", "gemini"] = "fireworks"
     api_key: Optional[str] = None
-    default_model: str = "accounts/fireworks/models/llama-v3p2-11b-vision-instruct"
+    default_model: str = "accounts/fireworks/models/llama4-maverick-instruct-basic"
     max_retries: int = 3
     timeout_seconds: int = 30
 

@@ -95,6 +95,11 @@ class FireworksCaptionAdapter(CaptionGenerator):
                     raise CaptionGenerationException("Fireworks authentication failed (401). Check API Key.")
                 elif response.status_code == 403:
                     raise CaptionGenerationException("Fireworks authorization failed (403).")
+                elif response.status_code == 404:
+                    raise CaptionGenerationException(
+                        f"Fireworks model '{self._settings.default_model}' not found (404). "
+                        "The model may be deprecated — update AI__DEFAULT_MODEL."
+                    )
                 elif response.status_code == 429:
                     logger.warning(f"Fireworks rate limit reached (429). Latency: {latency:.2f}s")
                     if attempt < self._settings.max_retries - 1:
