@@ -82,9 +82,9 @@ class DatabaseSettings(BaseSettings):
 
 class AIProviderSettings(BaseModel):
     """AI Provider configurations (credentials and routing)."""
-    provider: Literal["fireworks", "openai", "gemini"] = "fireworks"
+    provider: Literal["fireworks", "openai", "gemini", "groq"] = "gemini"
     api_key: Optional[str] = None
-    default_model: str = "accounts/fireworks/models/llama4-maverick-instruct-basic"
+    default_model: str = "gemini-2.5-flash"
     max_retries: int = 3
     timeout_seconds: int = 30
 

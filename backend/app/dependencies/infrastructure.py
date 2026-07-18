@@ -167,13 +167,19 @@ def get_image_preprocessor() -> "ImagePreprocessor":
 # ---------------------------------------------------------------------------
 def get_vision_analyzer(settings: Settings = Depends(get_settings)) -> "VisionAnalyzer":
     """
-    Provides the VisionAnalyzer implementation.
-    Instantiates the FireworksVisionAdapter using AIProviderSettings.
+    Provides the VisionAnalyzer implementation based on AI__PROVIDER.
     """
-    from app.infrastructure.vision.fireworks_adapter import FireworksVisionAdapter
-
     if settings.ai.provider == "fireworks":
+        from app.infrastructure.vision.fireworks_adapter import FireworksVisionAdapter
         return FireworksVisionAdapter(settings=settings.ai)
+
+    if settings.ai.provider == "groq":
+        from app.infrastructure.vision.groq_adapter import GroqVisionAdapter
+        return GroqVisionAdapter(settings=settings.ai)
+
+    if settings.ai.provider == "gemini":
+        from app.infrastructure.vision.gemini_adapter import GeminiVisionAdapter
+        return GeminiVisionAdapter(settings=settings.ai)
 
     raise NotImplementedError(f"Vision analyzer for provider '{settings.ai.provider}' is not implemented.")
 
@@ -183,14 +189,20 @@ def get_vision_analyzer(settings: Settings = Depends(get_settings)) -> "VisionAn
 # ---------------------------------------------------------------------------
 def get_caption_generator(settings: Settings = Depends(get_settings)) -> "CaptionGenerator":
     """
-    Provides the CaptionGenerator implementation.
-    Instantiates the FireworksCaptionAdapter using AIProviderSettings.
+    Provides the CaptionGenerator implementation based on AI__PROVIDER.
     """
-    from app.infrastructure.caption.fireworks_adapter import FireworksCaptionAdapter
-    
     if settings.ai.provider == "fireworks":
+        from app.infrastructure.caption.fireworks_adapter import FireworksCaptionAdapter
         return FireworksCaptionAdapter(settings=settings.ai)
-        
+
+    if settings.ai.provider == "groq":
+        from app.infrastructure.caption.groq_adapter import GroqCaptionAdapter
+        return GroqCaptionAdapter(settings=settings.ai)
+
+    if settings.ai.provider == "gemini":
+        from app.infrastructure.caption.gemini_adapter import GeminiCaptionAdapter
+        return GeminiCaptionAdapter(settings=settings.ai)
+
     raise NotImplementedError(f"Caption generator for provider '{settings.ai.provider}' is not implemented.")
 
 
