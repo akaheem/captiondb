@@ -102,6 +102,12 @@ class FireworksVisionAdapter(VisionAnalyzer):
                         f"Fireworks model '{self._settings.default_model}' not found (404). "
                         "The model may be deprecated — update AI__DEFAULT_MODEL."
                     )
+                elif response.status_code == 402 or response.status_code == 412:
+                    raise VisionAnalysisException(
+                        "Fireworks account is suspended or out of credit "
+                        f"({response.status_code}). Check billing at "
+                        "https://fireworks.ai/account/billing."
+                    )
                 elif response.status_code == 429:
                     logger.warning(f"Fireworks rate limit reached (429). Latency: {latency:.2f}s")
                     if attempt < self._settings.max_retries - 1:
