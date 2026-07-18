@@ -1,7 +1,7 @@
 import logging
 from typing import List, Tuple, Dict, Any, Optional
 import copy
-from app.domain.models.video import Video, VideoStatus
+from app.domain.models.video import Video, VideoStatus, ProcessingState
 from app.domain.interfaces.unit_of_work import AbstractUnitOfWork
 from app.core.exceptions import NotFoundException
 from app.services.file import FileManagementService
@@ -96,6 +96,8 @@ class ProjectService:
             new_video.project_name = f"{new_video.project_name} (Copy)"
             new_video.created_at = datetime.now(timezone.utc)
             new_video.updated_at = new_video.created_at
+            # A copy has not been processed — never inherit Processing/Completed state
+            new_video.state = ProcessingState()
             
             # Reset all scene IDs
             for scene in new_video.scenes:

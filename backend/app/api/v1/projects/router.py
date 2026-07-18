@@ -1,4 +1,5 @@
 from typing import List, Optional
+from datetime import datetime, timezone
 from fastapi import APIRouter, Depends, Query, Path, HTTPException, status
 from app.api.schemas.project import ProjectResponse, ProjectListResponse, SceneSchema
 from app.api.schemas.upload import VideoMetadataSchema, VideoDimensionsSchema
@@ -124,17 +125,26 @@ async def duplicate_project(
 )
 async def process_project(
     project_id: str = Path(...),
+    force: bool = Query(False, description="Restart processing even if the project is marked Processing/Completed."),
     project_service: ProjectService = Depends(get_project_service),
     pipeline_service: AIPipelineService = Depends(get_ai_pipeline_service)
 ) -> ProcessingStartResponse:
     try:
         video = await project_service.get_project_by_id(project_id)
 
-        if video.state.status in [VideoStatus.PROCESSING, VideoStatus.COMPLETED]:
-            raise HTTPException(
-                status_code=status.HTTP_409_CONFLICT,
-                detail=f"Project is currently {video.state.status.value}"
+        if not force and video.state.status in [VideoStatus.PROCESSING, VideoStatus.COMPLETED]:
+            # A crash mid-pipeline leaves the status stuck at Processing with no
+            # completion timestamp — treat such stale runs as restartable.
+            stale = (
+                video.state.status == VideoStatus.PROCESSING
+                and video.state.started_at is not None
+                and (datetime.now(timezone.utc) - video.state.started_at).total_seconds() > 600
             )
+            if not stale:
+                raise HTTPException(
+                    status_code=status.HTTP_409_CONFLICT,
+                    detail=f"Project is currently {video.state.status.value}"
+                )
 
         context = ProcessingContext(video=video, current_stage_name="Initialization")
         result = await pipeline_service.process(context)
