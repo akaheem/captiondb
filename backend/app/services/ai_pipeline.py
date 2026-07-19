@@ -165,7 +165,16 @@ class AIPipelineService:
             result.status = PipelineStatus.PARTIAL_SUCCESS
         else:
             result.status = PipelineStatus.FAILED
-            result.error_message = "All scenes failed processing."
+            # Surface the first scene's actual error — "all scenes failed" alone
+            # makes provider misconfiguration (bad key, wrong model) undiagnosable.
+            first_error = next(
+                (sr.error_message for sr in result.scene_results if sr.error_message),
+                None
+            )
+            result.error_message = (
+                f"All scenes failed processing. First error: {first_error}"
+                if first_error else "All scenes failed processing."
+            )
             
         logger.info(f"AI Pipeline completed for {video_id}. Status: {result.status.value}, "
                     f"Success: {result.statistics.successful_scenes}, Failed: {result.statistics.failed_scenes}")
