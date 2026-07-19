@@ -37,6 +37,28 @@ class GeminiVisionAdapter(VisionAnalyzer):
 
     BASE_URL = "https://generativelanguage.googleapis.com/v1beta/models"
 
+    # Enforced server-side via generationConfig.responseSchema so Gemini
+    # cannot wrap the object in an array or drift from the field set.
+    RESPONSE_SCHEMA: Dict[str, Any] = {
+        "type": "OBJECT",
+        "properties": {
+            "scene_summary": {"type": "STRING"},
+            "objects": {"type": "ARRAY", "items": {"type": "STRING"}},
+            "people": {"type": "ARRAY", "items": {"type": "STRING"}},
+            "activities": {"type": "ARRAY", "items": {"type": "STRING"}},
+            "environment": {"type": "STRING"},
+            "mood": {"type": "STRING"},
+            "dominant_colors": {"type": "ARRAY", "items": {"type": "STRING"}},
+            "ocr_placeholder": {"type": "STRING"},
+            "safety_flags": {"type": "ARRAY", "items": {"type": "STRING"}},
+        },
+        "required": [
+            "scene_summary", "objects", "people", "activities",
+            "environment", "mood", "dominant_colors",
+            "ocr_placeholder", "safety_flags",
+        ],
+    }
+
     def __init__(self, settings: AIProviderSettings):
         self._settings = settings
         if not self._settings.api_key:
@@ -108,6 +130,7 @@ class GeminiVisionAdapter(VisionAnalyzer):
                 "maxOutputTokens": max(request.max_tokens, 4096),
                 "temperature": request.temperature,
                 "responseMimeType": "application/json",
+                "responseSchema": self.RESPONSE_SCHEMA,
                 # Disable thinking for structured extraction — it burns the
                 # output budget and adds latency without improving fidelity.
                 "thinkingConfig": {"thinkingBudget": 0},
@@ -219,6 +242,13 @@ class GeminiVisionAdapter(VisionAnalyzer):
                     content = content[4:].strip()
 
             parsed = json.loads(content)
+            # Gemini occasionally wraps the object in a single-element array.
+            if isinstance(parsed, list):
+                parsed = next((p for p in parsed if isinstance(p, dict)), None)
+            if not isinstance(parsed, dict):
+                raise VisionAnalysisException(
+                    "Gemini vision response JSON was not an object matching the analysis schema."
+                )
 
             def _as_list(value: Any) -> List[str]:
                 """Gemini sometimes returns a sentence where the schema wants a list."""
