@@ -103,9 +103,14 @@ class GeminiVisionAdapter(VisionAnalyzer):
         payload: Dict[str, Any] = {
             "contents": contents,
             "generationConfig": {
-                "maxOutputTokens": request.max_tokens,
+                # Give output real headroom: Gemini's "thinking" tokens count
+                # against maxOutputTokens and silently truncate the JSON.
+                "maxOutputTokens": max(request.max_tokens, 4096),
                 "temperature": request.temperature,
                 "responseMimeType": "application/json",
+                # Disable thinking for structured extraction — it burns the
+                # output budget and adds latency without improving fidelity.
+                "thinkingConfig": {"thinkingBudget": 0},
             },
         }
         if system_instruction:
@@ -215,6 +220,14 @@ class GeminiVisionAdapter(VisionAnalyzer):
 
             parsed = json.loads(content)
 
+            def _as_list(value: Any) -> List[str]:
+                """Gemini sometimes returns a sentence where the schema wants a list."""
+                if isinstance(value, list):
+                    return [str(v) for v in value]
+                if isinstance(value, str) and value.strip():
+                    return [value.strip()]
+                return []
+
             usage_meta = json_data.get("usageMetadata", {})
             metadata = VisionAnalysisMetadata(
                 model_info=AIModelInfo(
@@ -231,15 +244,15 @@ class GeminiVisionAdapter(VisionAnalyzer):
             )
 
             return VisionAnalysisResult(
-                scene_summary=parsed.get("scene_summary", ""),
-                objects=parsed.get("objects", []) or [],
-                people=parsed.get("people", []) or [],
-                activities=parsed.get("activities", []) or [],
-                environment=parsed.get("environment", "") or "",
-                mood=parsed.get("mood", "") or "",
-                dominant_colors=parsed.get("dominant_colors", []) or [],
-                ocr_placeholder=parsed.get("ocr_placeholder", "") or "",
-                safety_flags=parsed.get("safety_flags", []) or [],
+                scene_summary=str(parsed.get("scene_summary", "") or ""),
+                objects=_as_list(parsed.get("objects")),
+                people=_as_list(parsed.get("people")),
+                activities=_as_list(parsed.get("activities")),
+                environment=str(parsed.get("environment", "") or ""),
+                mood=str(parsed.get("mood", "") or ""),
+                dominant_colors=_as_list(parsed.get("dominant_colors")),
+                ocr_placeholder=str(parsed.get("ocr_placeholder", "") or ""),
+                safety_flags=_as_list(parsed.get("safety_flags")),
                 metadata=metadata,
             )
 
