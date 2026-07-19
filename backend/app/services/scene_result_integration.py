@@ -166,19 +166,23 @@ class SceneResultIntegrationService:
                 cost.estimated_vision_cost += v_cost
                 cost.estimated_total_cost += v_cost
                 
-        # 2. Integrate Caption Data
-        if ai_scene.caption_result and ai_scene.caption_result.candidates:
-            # We pick the first candidate as the primary caption for the requested tone
-            best_candidate = ai_scene.caption_result.candidates[0]
-            scene.captions[ai_scene.target_tone] = best_candidate.text
-            
-            # Aggregate Caption Tokens
-            cr = ai_scene.caption_result
+        # 2. Integrate Caption Data — one caption per generated tone
+        caption_results = getattr(ai_scene, "caption_results", None) or {}
+        if not caption_results and ai_scene.caption_result:
+            # Backward compatibility: single-result pipelines
+            caption_results = {ai_scene.target_tone: ai_scene.caption_result}
+
+        for tone, cr in caption_results.items():
+            if not cr or not cr.candidates:
+                continue
+            scene.captions[tone] = cr.candidates[0].text
+
+            # Aggregate Caption Tokens per tone
             if hasattr(cr, 'metadata') and hasattr(cr.metadata, 'usage'):
                 usage = cr.metadata.usage
                 stats.total_prompt_tokens += usage.prompt_tokens
                 stats.total_completion_tokens += usage.completion_tokens
-                
+
                 c_cost = (usage.prompt_tokens * self.CAPTION_PROMPT_COST_WEIGHT) + (usage.completion_tokens * self.CAPTION_COMP_COST_WEIGHT)
                 cost.estimated_caption_cost += c_cost
                 cost.estimated_total_cost += c_cost

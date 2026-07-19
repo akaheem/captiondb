@@ -53,6 +53,9 @@ class ScenePipelineResult:
     is_success: bool
     vision_result: Optional[VisionAnalysisResult] = None
     caption_result: Optional[CaptionGenerationResult] = None
+    # One caption per social tone (formal, sarcastic, ...). caption_result is
+    # kept as the primary/requested-tone result for backward compatibility.
+    caption_results: Dict[CaptionTone, CaptionGenerationResult] = field(default_factory=dict)
     error_message: Optional[str] = None
     processing_time_seconds: float = 0.0
 

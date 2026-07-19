@@ -119,7 +119,9 @@ class GeminiCaptionAdapter(CaptionGenerator):
                 elif response.status_code == 429:
                     logger.warning(f"Gemini rate limit (429). Latency: {latency:.2f}s")
                     if attempt < self._settings.max_retries - 1:
-                        await asyncio.sleep(2 ** attempt)
+                        # Free tier enforces a per-minute window; short exponential
+                        # backoff never clears it. Wait long enough to re-enter.
+                        await asyncio.sleep(20 * (attempt + 1))
                         continue
                     raise CaptionGenerationException(
                         "Gemini rate limit exceeded after maximum retries."

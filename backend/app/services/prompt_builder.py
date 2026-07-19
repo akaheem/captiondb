@@ -125,32 +125,69 @@ class PromptBuilder:
             temperature=0.2
         )
 
+    # Caption-writing style instructions per tone. Unlike TONE_MODIFIERS
+    # (which steer vision analysis), these describe the voice of the final
+    # ready-to-post social media caption.
+    CAPTION_TONE_STYLES = {
+        CaptionTone.FORMAL: (
+            "Write a polished, professional caption suitable for LinkedIn or a brand page. "
+            "Clear, confident, no slang, at most one tasteful emoji."
+        ),
+        CaptionTone.SARCASTIC: (
+            "Write a dry, witty, sarcastic caption. Deadpan humor, playful mockery of the "
+            "situation in the video, internet-native voice."
+        ),
+        CaptionTone.HUMOROUS_TECH: (
+            "Write a funny caption aimed at developers/tech people. Programming jokes, "
+            "tech culture references, relatable engineering humor."
+        ),
+        CaptionTone.HUMOROUS_NON_TECH: (
+            "Write a funny, widely relatable caption for a general audience. Everyday humor, "
+            "meme-adjacent energy, no technical references."
+        ),
+        CaptionTone.AUDIO: (
+            "Write a caption that plays on the sounds implied by the video (music, speech, "
+            "noise), inviting viewers to turn the sound on."
+        ),
+        CaptionTone.NONE: (
+            "Write a clean, engaging, neutral caption that describes the moment compellingly."
+        ),
+    }
+
     def build_caption_generation_prompt(
-        self, 
-        analysis_result: VisionAnalysisResult, 
+        self,
+        analysis_result: VisionAnalysisResult,
         target_tone: CaptionTone
     ) -> CaptionGenerationRequest:
         """
         Constructs a prompt for generating a caption based on a VisionAnalysisResult.
         """
+        style = self.CAPTION_TONE_STYLES.get(target_tone, self.CAPTION_TONE_STYLES[CaptionTone.NONE])
         system_msg = AIMessage(
             role=AIMessageRole.SYSTEM,
             content=[AITextContent(
-                text="You are an expert short-form video caption writer. "
-                     "Write a highly engaging, viral-ready caption based on the provided scene analysis.\n"
-                     f"TONE INSTRUCTION: {self.TONE_MODIFIERS.get(target_tone, self.TONE_MODIFIERS[CaptionTone.NONE])}\n"
-                     "Focus on retaining key objects and activities while matching the exact tone."
+                text="You are an expert social media caption writer. Given a scene analysis "
+                     "from a video, write ONE ready-to-post caption for social media "
+                     "(Instagram/TikTok/X style).\n"
+                     f"STYLE: {style}\n"
+                     "RULES:\n"
+                     "1. Output ONLY the caption text — no quotes, no preamble, no explanations.\n"
+                     "2. Keep it short and punchy: 1-2 sentences, under 200 characters preferred.\n"
+                     "3. Add 2-4 relevant hashtags at the end.\n"
+                     "4. Do NOT describe the video mechanically — capture its vibe and hook the viewer.\n"
+                     "5. Base it only on what is actually in the scene analysis."
             )]
         )
         
         user_content = (
             f"Scene Summary: {analysis_result.scene_summary}\n"
             f"Objects: {', '.join(analysis_result.objects)}\n"
+            f"People: {', '.join(analysis_result.people)}\n"
             f"Activities: {', '.join(analysis_result.activities)}\n"
             f"Environment: {analysis_result.environment}\n"
             f"Mood: {analysis_result.mood}\n"
             f"OCR text: {analysis_result.ocr_placeholder}\n\n"
-            "Generate a caption:"
+            "Write the caption now:"
         )
         
         user_msg = AIMessage(

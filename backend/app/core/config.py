@@ -84,7 +84,7 @@ class AIProviderSettings(BaseModel):
     """AI Provider configurations (credentials and routing)."""
     provider: Literal["fireworks", "openai", "gemini", "groq"] = "gemini"
     api_key: Optional[str] = None
-    default_model: str = "gemini-flash-latest"
+    default_model: str = "gemini-flash-lite-latest"
     max_retries: int = 3
     timeout_seconds: int = 30
 

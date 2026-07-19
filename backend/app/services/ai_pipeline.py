@@ -2,6 +2,7 @@
 AI Pipeline Orchestrator.
 Coordinates the end-to-end execution of Video Analysis, Vision AI, and Caption Generation.
 """
+import asyncio
 import time
 from typing import List, Optional
 from loguru import logger
@@ -20,7 +21,7 @@ from app.services.vision import VisionAnalysisService
 from app.services.caption_generation import CaptionGenerationService
 from app.services.scene_result_integration import SceneResultIntegrationService
 from app.domain.interfaces.unit_of_work import AbstractUnitOfWork
-from app.domain.models.video import VideoStatus
+from app.domain.models.video import VideoStatus, CaptionTone
 from app.core.exceptions import VideoAnalysisPipelineException
 
 
@@ -30,6 +31,14 @@ class AIPipelineService:
     Executes the Video Analysis Pipeline to extract scenes/frames, then loops
     through each scene to perform Vision Analysis and Caption Generation.
     """
+
+    # The four social-media caption tones generated for every scene.
+    SOCIAL_TONES = [
+        CaptionTone.FORMAL,
+        CaptionTone.SARCASTIC,
+        CaptionTone.HUMOROUS_TECH,
+        CaptionTone.HUMOROUS_NON_TECH,
+    ]
     
     def __init__(
         self,
@@ -126,24 +135,45 @@ class AIPipelineService:
                 # 2. Vision Analysis
                 vision_result = await self._vision_service.process(package)
                 scene_result.vision_result = vision_result
-                
+
                 # Aggregate vision tokens if supported
                 if hasattr(vision_result, "metadata") and hasattr(vision_result.metadata, "usage"):
                     usage = vision_result.metadata.usage
                     result.usage.add(usage.prompt_tokens, usage.completion_tokens, usage.total_tokens)
-                
-                # 3. Caption Generation
-                caption_result = await self._caption_service.process(vision_result, target_tone)
-                scene_result.caption_result = caption_result
-                
-                # Aggregate caption tokens
-                if hasattr(caption_result, "metadata") and hasattr(caption_result.metadata, "usage"):
-                    usage = caption_result.metadata.usage
-                    result.usage.add(usage.prompt_tokens, usage.completion_tokens, usage.total_tokens)
-                    
+
+                # 3. Caption Generation — one caption per social tone so the
+                # user gets a ready-to-post option for each style.
+                caption_errors = []
+                for i, tone in enumerate(self.SOCIAL_TONES):
+                    try:
+                        # Pace requests: each scene issues 5 AI calls and the
+                        # Gemini free tier allows 20/min; bursting trips 429s.
+                        if i > 0:
+                            await asyncio.sleep(3)
+                        caption_result = await self._caption_service.process(vision_result, tone)
+                        scene_result.caption_results[tone] = caption_result
+
+                        # Keep the first successful result as the primary for
+                        # backward compatibility with existing consumers.
+                        if scene_result.caption_result is None:
+                            scene_result.caption_result = caption_result
+
+                        if hasattr(caption_result, "metadata") and hasattr(caption_result.metadata, "usage"):
+                            usage = caption_result.metadata.usage
+                            result.usage.add(usage.prompt_tokens, usage.completion_tokens, usage.total_tokens)
+                    except Exception as tone_err:
+                        caption_errors.append(f"{tone.value}: {tone_err}")
+                        logger.warning(f"Caption tone {tone.value} failed for scene {scene_id}: {tone_err}")
+
+                if not scene_result.caption_results:
+                    raise RuntimeError(
+                        f"All caption tones failed. Errors: {'; '.join(caption_errors)}"
+                    )
+
                 scene_result.is_success = True
                 result.statistics.successful_scenes += 1
-                logger.debug(f"Scene {scene_id} processed successfully.")
+                logger.debug(f"Scene {scene_id} processed successfully with "
+                             f"{len(scene_result.caption_results)} caption tones.")
                 
             except Exception as e:
                 scene_result.error_message = str(e)
